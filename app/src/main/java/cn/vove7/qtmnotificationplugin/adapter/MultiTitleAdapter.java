@@ -57,36 +57,21 @@ public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.Vi
 
    }
 
-   int nowGroupIndex = 0;
 
    private static final String TAG = "Adapter";
 
-   int p = 0;
-
-   @Override
-   public void onBindViewHolder(ViewHolder holder, int position) {
-      Log.d(TAG, "onBindViewHolder: 当前pos->" + position + " nowGroup->" + nowGroupIndex);
-      int num = getGroupNum(nowGroupIndex);//前面的数量
-      Log.d(TAG, "onBindViewHolder: num->" + num);
-      if (num == 0 || position % num == 0) {//标题
-         Log.d(TAG, "onBindViewHolder: 标题");
-         holder.title.setText(titles[nowGroupIndex]);
-         holder.title.setVisibility(View.VISIBLE);
-         holder.nickname.setVisibility(View.GONE);
-         holder.checkBox.setVisibility(View.GONE);
-         nowGroupIndex++;
-         p = 0;
-      } else {
-         Log.d(TAG, "onBindViewHolder: 元素");
-         String s = lists[nowGroupIndex - 1].get(p++);
-         holder.checkBox.setChecked(checks[nowGroupIndex-1]);
-         holder.nickname.setText(s);
+   private int calNowGroupIndex(int p) {
+      for (int i = 0; i < lists.length; i++) {
+         if (p < getGroupNum(i + 1)) {
+            return i;
+         }
       }
-
-
+      return lists.length - 1;
    }
 
    private int getGroupNum(int group) {
+      if (group <= 0)
+         return 0;
       int c = 0;
       for (int i = 0; i < group; i++) {
          c += lists[i].size();
@@ -95,12 +80,34 @@ public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.Vi
    }
 
    @Override
+   public void onBindViewHolder(ViewHolder holder, int position) {
+      int nowGroupIndex = calNowGroupIndex(position);
+      int index = position - getGroupNum(nowGroupIndex);
+      Log.d(TAG, "onBindViewHolder: 当前pos->" + position + " nowGroup->" + nowGroupIndex + " index-> " + index);
+
+      if (index == 0) {//标题
+         Log.d(TAG, "onBindViewHolder: 标题->"+titles[nowGroupIndex]);
+         holder.title.setText(titles[nowGroupIndex]);
+         holder.title.setVisibility(View.VISIBLE);
+         holder.nickname.setVisibility(View.GONE);
+         holder.checkBox.setVisibility(View.GONE);
+      } else {
+         holder.title.setVisibility(View.GONE);
+         holder.nickname.setVisibility(View.VISIBLE);
+         holder.checkBox.setVisibility(View.VISIBLE);
+         String s = lists[nowGroupIndex].get(index - 1);
+         Log.d(TAG, "onBindViewHolder: 元素->"+s);
+         holder.checkBox.setChecked(checks[nowGroupIndex]);
+         holder.nickname.setText(s);
+      }
+   }
+
+   @Override
    public int getItemCount() {
       int count = 0;
       for (ArrayList list : lists) {
          count += list.size();
       }
-      Log.d(TAG, "getItemCount: count->" + (count + lists.length));
       return count + lists.length;
    }
 }
