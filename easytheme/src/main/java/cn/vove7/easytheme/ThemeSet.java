@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 预设主题
- * The default theme
+ * 预设主题集
+ * The own theme
  */
 public class ThemeSet {
    private static final Map<String, Integer> themeMap = new HashMap<>();
