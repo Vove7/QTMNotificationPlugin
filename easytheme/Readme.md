@@ -1,6 +1,7 @@
 # EasyTheme
 > a simple theme engine
 
+![example](http://www.vove7.cn:800/typecho/usr/uploads/2018/03/994988033.gif)
 ## how to use?
 - in your applicatoin  ```onCreate()``` insert ```EasyTheme.init(this, ThemeSet.ThemeMode.Light, ThemeSet.Theme.Primary);```
 ```
