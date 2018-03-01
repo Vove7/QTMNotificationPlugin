@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">EasyTheme</string>
+    <string name="key_easy_theme">easy_theme</string>
+    <string name="key_easy_theme_id">easy_theme_id</string>
+    <string name="key_easy_theme_mode">easy_theme_mode</string>
+
+</resources>

@@ -1,0 +1,8 @@
+<resources>
+    <!--NavigationIcon和标题之间的距离-->
+    <style name="ToolbarStyle" parent="Base.Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">-5dp</item>
+    </style>
+
+</resources>

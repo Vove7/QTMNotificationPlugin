@@ -1,0 +1,124 @@
+<resources>
+    <string name="app_name">QTM通知助手</string>
+    <string name="title_qq_tim">QQ/TIM</string>
+    <string name="title_tim">TIM</string>
+    <string name="title_wechat">微信</string>
+    <string name="text_donate">捐赠</string>
+    <string name="text_about">关于</string>
+    <string name="menu_help">帮助</string>
+    <string name="request_notification_access">通知访问权限</string>
+    <string name="request_permission_message">使用此APP需打开通知访问权限</string>
+    <string name="text_button_open">去开启</string>
+    <string name="text_button_exit">退出</string>
+    <string name="access_open_failed_tips">开启失败，可尝试：\n1.关闭再打开通知使用权限\n2.重启手机</string>
+    <string name="text_reopen">重新开启</string>
+    <string name="text_recheck">重新检测</string>
+    <string name="check_access_status">检查开启状态…</string>
+    <string name="text_total_switch">开启</string>
+    <string name="text_vibrator">震动</string>
+    <string name="text_vibrator_strength">震动强度</string>
+    <string name="text_open_vibrator">开启震动</string>
+    <string name="qtm_online">QTM提醒已上线</string>
+    <string name="text_repeat_num">震动次数</string>
+    <string name="text_num">次数</string>
+    <!--preference_keys begin-->
+    <!--总开关-->
+    <string name="key_total_switch_qq">total_switch_qq</string>
+
+    <string name="key_total_switch_wechat">total_switch_wechat</string>
+    <!--模式-->
+    <string name="key_mode_qq">mode_qq</string>
+
+    <string name="key_mode_wechat">mode_wechat</string>
+    <!--震动-->
+    <string name="key_vibrator_strength_qq">vibrator_strength_qq</string>
+
+    <string name="key_vibrator_strength_wechat">vibrator_strength_wechat</string>
+    <string name="key_repeat_num_qq">repeat_num_qq</string>
+
+    <string name="key_repeat_num_wechat">repeat_num_wechat</string>
+    <string name="key_is_vibrator_qq">is_vibrator_qq</string>
+
+    <string name="key_is_vibrator_wechat">is_vibrator_wechat</string>
+    <!--铃声-->
+    <string name="key_is_alarm_qq">is_alarm_qq</string>
+
+    <string name="key_is_alarm_wechat">is_alarm_wechat</string>
+    <string name="key_ringtone_qq">ringtone_qq</string>
+
+    <string name="key_ringtone_wechat">ringtone_wechat</string>
+    <!--黑名单-->
+    <string name="key_black_list_qq">black_list_qq</string>
+
+    <string name="key_black_list_wechat">black_list_wechat</string>
+    <!--免打扰时段-->
+    <string name="key_no_disturbing_end_qq">no_disturbing_end_qq</string>
+    <string name="key_no_disturbing_begin_qq">no_disturbing_begin_qq</string>
+
+
+    <string name="key_no_disturbing_end_wechat">no_disturbing_end_wechat</string>
+    <string name="key_no_disturbing_begin_wechat">no_disturbing_begin_wechat</string>
+    <!--免打扰-->
+    <string name="key_is_no_distrubing_qq">is_no_distrubing_qq</string>
+
+    <string name="key_is_no_distrubing_wechat">is_no_distrubing_wechat</string>
+    <!--特别关心免打扰-->
+    <string name="key_is_fa_no_distrubing_qq">is_fa_no_distrubing_qq</string>
+
+    <string name="key_is_fa_no_distrubing_wechat">is_fa_no_distrubing_wechat</string>
+    <!--特别关心-->
+    <string name="key_fas_qq">fas_qq</string>
+
+    <string name="key_fas_wechat">fas_wechat</string>
+    <string name="key_fa_ringtone_qq">fa_ringtone_qq</string>
+
+    <string name="key_fa_ringtone_wechat">fa_ringtone_wechat</string>
+    <!--熄屏提醒-->
+    <string name="key_is_only_screen_off_qq">is_only_screen_off_qq</string>
+
+    <string name="key_is_only_screen_off_wechat">is_only_screen_off_wechat</string>
+    <!--theme-->
+    <string name="key_theme_id">theme_id</string>
+    <!--keys end-->
+    <string-array name="entries_repeat_num">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="entries_mode">
+        <item>@string/text_default</item>
+        <item>@string/text_only_fa</item>
+    </string-array>
+    <string-array name="entries_mode_values">
+        <item>@string/mode_default</item>
+        <item>@string/mode_only_fa</item>
+    </string-array>
+    <string name="text_default">默认</string>
+    <string name="text_only_screen_off">仅在熄屏下提醒</string>
+    <string name="text_only_fa">仅特别关心</string>
+    <string name="mode_default">default</string>
+    <string name="mode_only_screen_off">only_screen_off</string>
+    <string name="mode_only_fa">only_fa</string>
+    <integer name="default_vibrator_strength">200</integer>
+    <string name="default_repeat_num">2</string>
+    <string name="text_begin_time">开始时间</string>
+    <string name="text_end_time">结束时间</string>
+    <string name="text_open_notification_ringtone">开启提示音</string>
+    <string name="text_ringtone">提示音</string>
+    <string name="text_no_distrubing">免打扰</string>
+    <string name="text_open_no_distrubing">开启免打扰</string>
+    <string name="text_strength">强度</string>
+    <string name="text_word_mode">工作模式</string>
+    <string name="text_mode">模式</string>
+    <string name="summary_fa">免打扰时段，仍提醒来自特别关心</string>
+    <string name="text_fa_notify">特别关心提醒</string>
+    <string name="text_fa">特别关心</string>
+    <string name="text_black_list">黑名单</string>
+    <string name="text_manage_fa">管理特别关心</string>
+    <string name="text_manage_black_list">管理黑名单</string>
+    <string name="summary_black_list">不提醒来自黑名单</string>
+    <string name="text_random_change_skin">随机换肤</string>
+
+</resources>

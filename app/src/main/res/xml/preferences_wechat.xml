@@ -1,0 +1,83 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:myattrs="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="@string/title_wechat">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_total_switch_wechat"
+            android:title="@string/text_total_switch" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/text_mode">
+        <ListPreference
+            android:defaultValue="@string/mode_default"
+            android:entries="@array/entries_mode"
+            android:entryValues="@array/entries_mode_values"
+            android:key="@string/key_mode_wechat"
+            android:summary="@string/text_default"
+            android:title="@string/text_word_mode" />
+        <CheckBoxPreference
+            android:title="@string/text_only_screen_off"
+            android:defaultValue="false"
+            android:key="@string/key_is_only_screen_off_wechat" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/text_vibrator">
+        <SwitchPreference
+            android:key="@string/key_is_vibrator_wechat"
+            android:title="@string/text_open_vibrator" />
+        <cn.vove7.qtmnotificationplugin.diydialogpreferences.SeekBarDialogPreference
+            android:dialogTitle="@string/text_vibrator_strength"
+            android:key="@string/key_vibrator_strength_wechat"
+            android:title="@string/text_strength" />
+        <ListPreference
+            android:defaultValue="2"
+            android:dialogTitle="@string/text_repeat_num"
+            android:entries="@array/entries_repeat_num"
+            android:entryValues="@array/entries_repeat_num"
+            android:key="@string/key_repeat_num_wechat"
+            android:summary="@string/text_repeat_num"
+            android:title="@string/text_num" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/text_ringtone">
+        <SwitchPreference
+            android:key="@string/key_is_alarm_wechat"
+            android:title="@string/text_open_notification_ringtone" />
+        <RingtonePreference
+            android:key="@string/key_ringtone_wechat"
+            android:ringtoneType="notification"
+            android:title="@string/text_ringtone" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/text_fa">
+        <EditTextPreference
+            android:title="@string/text_manage_fa"
+            android:key="@string/key_fas_wechat"/>
+        <RingtonePreference
+            android:title="@string/text_ringtone"
+            android:ringtoneType="notification"
+            android:key="@string/key_fa_ringtone_wechat"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/text_black_list">
+        <EditTextPreference android:title="@string/text_manage_black_list"
+            android:summary="@string/summary_black_list"
+            android:key="@string/key_black_list_wechat"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/text_no_distrubing">
+        <SwitchPreference
+            android:key="@string/key_is_no_distrubing_wechat"
+            android:title="@string/text_open_no_distrubing" />
+        <cn.vove7.qtmnotificationplugin.diydialogpreferences.TimePickerPreference
+            android:dialogTitle="@string/text_begin_time"
+            android:key="@string/key_no_disturbing_begin_wechat"
+            android:title="@string/text_begin_time"
+            myattrs:defaultHour="23"
+            myattrs:defaultMinute="0" />
+        <cn.vove7.qtmnotificationplugin.diydialogpreferences.TimePickerPreference
+            android:dialogTitle="@string/text_end_time"
+            android:key="@string/key_no_disturbing_end_wechat"
+            android:title="@string/text_end_time"
+            myattrs:defaultHour="8"
+            myattrs:defaultMinute="0" />
+        <CheckBoxPreference
+            android:key="@string/key_is_fa_no_distrubing_wechat"
+            android:summary="@string/summary_fa"
+            android:title="@string/text_fa_notify" />
+    </PreferenceCategory>
+</PreferenceScreen>

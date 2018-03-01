@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_qq"
+        android:icon="@drawable/ic_qq"
+        android:title="@string/title_qq_tim" />
+
+    <!--<item-->
+        <!--android:id="@+id/navigation_tim"-->
+        <!--android:icon="@drawable/ic_tim"-->
+        <!--android:title="@string/title_tim" />-->
+
+    <item
+        android:id="@+id/navigation_wechat"
+        android:icon="@drawable/ic_wechat"
+        android:title="@string/title_wechat" />
+
+</menu>
