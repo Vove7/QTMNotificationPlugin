@@ -1,6 +1,6 @@
 # EasyTheme
 > a simple theme engine
-
+![example](www.baidu.com/img/baidu_85beaf5496f291521eb75ba38eacbd87.svg)
 ## how to use?
 - in your applicatoin  ```onCreate()``` insert ```EasyTheme.init(this, ThemeSet.ThemeMode.Light, ThemeSet.Theme.Primary);```
 ```
