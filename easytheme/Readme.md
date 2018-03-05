@@ -14,7 +14,7 @@
       <version>1.0</version>
       <type>pom</type>
    </dependency>
-```
+   ```
 - in your applicatoin  ```onCreate()``` insert ```EasyTheme.init(this, ThemeSet.ThemeMode.Light, ThemeSet.Theme.Primary);```
 ```
    @Override
