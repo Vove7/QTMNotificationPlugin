@@ -4,8 +4,11 @@
 ![example](http://www.vove7.cn:800/typecho/usr/uploads/2018/03/994988033.gif)
 ## how to use?
 - add this library
+
    1.gradle
+   
    `compile 'cn.vove7:EasyTheme:1.0'`
+   
    2.maven
    ```
    <dependency>
