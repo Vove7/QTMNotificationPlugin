@@ -17,8 +17,12 @@
       <version>1.0</version>
       <type>pom</type>
    </dependency>
-   ```
-- in your applicatoin  ```onCreate()``` insert ```EasyTheme.init(this, ThemeSet.ThemeMode.Light, ThemeSet.Theme.Primary);```
+   ```
+
+- in your manifest,set `android:theme="@style/StartBackground"` in a activity which has change theme function.
+> this is to prevent arise white screen in transtion animation of change theme.
+
+- in your applicatoin  ```onCreate()``` insert ```EasyTheme.init(this, ThemeSet.ThemeMode.Light, ThemeSet.Theme.Primary);```
 ```
    @Override
    public void onCreate() {
