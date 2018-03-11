@@ -6,7 +6,6 @@ import cn.vove7.easytheme.EasyTheme;
 import cn.vove7.easytheme.ThemeSet;
 import cn.vove7.qtmnotificationplugin.MainActivity;
 import cn.vove7.qtmnotificationplugin.QTMNotificationListener;
-import cn.vove7.qtmnotificationplugin.R;
 
 public class MyApplication extends Application {
    static MyApplication myApplication;
@@ -17,6 +16,7 @@ public class MyApplication extends Application {
    @Override
    public void onCreate() {
       super.onCreate();
+      myApplication = this;
       EasyTheme.init(this, ThemeSet.ThemeMode.Light, ThemeSet.Theme.Primary);
    }
 
@@ -26,6 +26,7 @@ public class MyApplication extends Application {
       }
       return myApplication;
    }
+
 
    public QTMNotificationListener getQTMNotificationListener() {
       return QTMNotificationListener;

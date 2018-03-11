@@ -7,10 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-import static cn.vove7.qtmnotificationplugin.ManageFaActivity.PKG_TYPE_QQ_TIM;
-import static cn.vove7.qtmnotificationplugin.QTMNotificationListener.TYPE_QQ_TIM;
-import static cn.vove7.qtmnotificationplugin.QTMNotificationListener.TYPE_WECHAT;
-
 public class SQLOperator {
    private Context context;
    private SQLiteHelper sqLiteHelper;
@@ -34,11 +30,16 @@ public class SQLOperator {
       }
    }
 
-   public ArrayList<String> searchNickname(String s, String type) {
+   public ArrayList<String> queryNickname(String s, String type, ArrayList<String> notIn) {
       SQLiteDatabase database = new SQLiteHelper(context).getReadableDatabase();
 
-      Cursor cursor = database.rawQuery("select nickname from " + SQLiteHelper.TABLE_NICKNAME +
-                      " where type=? and nickname like ?",
+      String sql = "select nickname from " + SQLiteHelper.TABLE_NICKNAME +
+              " where type=? and nickname like ?";
+      String notInSql = buildNotIn(notIn);
+      if (notInSql != null) {
+         sql += " and nickname not in " + notInSql;
+      }
+      Cursor cursor = database.rawQuery(sql,
               new String[]{type, '%' + s + '%'});
       ArrayList<String> list = new ArrayList<>();
       while (cursor.moveToNext()) {
@@ -60,24 +61,31 @@ public class SQLOperator {
       return b;
    }
 
-   public ArrayList<String> getNickname(int pkgType, ArrayList<String> notIn) {
-      StringBuilder notInBuilder = null;
-      if (notIn != null && notIn.size() > 0) {
-         notInBuilder = new StringBuilder("'" + notIn.get(0) + "'");
-         for (int i = 1; i < notIn.size(); i++) {
-            notInBuilder.append(",'").append(notIn.get(i)).append("'");
-         }
+   private String buildNotIn(ArrayList<String> notIn) {
+      if (notIn == null || notIn.size() == 0)
+         return null;
+
+      StringBuilder notInBuilder = new StringBuilder("(");
+      notInBuilder.append("'").append(notIn.get(0)).append("'");
+      for (int i = 1; i < notIn.size(); i++) {
+         notInBuilder.append(",'").append(notIn.get(i)).append("'");
       }
+      notInBuilder.append(")");
+      return notInBuilder.toString();
+   }
+
+   public ArrayList<String> getAllNickname(String type, ArrayList<String> notIn) {
 
       SQLiteDatabase database = new SQLiteHelper(context).getReadableDatabase();
       StringBuilder sqlBuilder = new StringBuilder("select nickname from " + SQLiteHelper.TABLE_NICKNAME +
               " where type=?");
-      if (notInBuilder != null) {
-         sqlBuilder.append(" and nickname not in (").append(notInBuilder.toString()).append(")");
+      String notInSql = buildNotIn(notIn);
+      if (notInSql != null) {
+         sqlBuilder.append(" and nickname not in ").append(notInSql);
       }
 
       Cursor cursor = database.rawQuery(sqlBuilder.toString(),
-              new String[]{pkgType == PKG_TYPE_QQ_TIM ? TYPE_QQ_TIM : TYPE_WECHAT});
+              new String[]{type});
       ArrayList<String> list = new ArrayList<>();
       while (cursor.moveToNext()) {
          list.add(cursor.getString(0));

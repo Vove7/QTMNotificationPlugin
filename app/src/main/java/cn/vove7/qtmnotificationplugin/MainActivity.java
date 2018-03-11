@@ -54,13 +54,6 @@ public class MainActivity extends BaseThemeActivity {
             //viewPager.setCurrentItem(0);
             switchFragment(qqSettingsFragment);
             return true;
-         //case R.id.navigation_tim:
-         //   switchFragment(timSettingsFragment);
-         //   if (doubleClick && type == 2) {//关于
-         //      Toast.makeText(this, "关于", Toast.LENGTH_SHORT).show();
-         //   }
-         //   type = 2;
-         //   return true;
          case R.id.navigation_wechat:
             if (doubleClick && type == 3) {
                //isDark = true;//微信夜间模式
@@ -103,7 +96,6 @@ public class MainActivity extends BaseThemeActivity {
       navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
       initFragment();
-
 
       Toolbar toolbar = findViewById(R.id.toolbar);
       toolbar.inflateMenu(R.menu.main_menu);

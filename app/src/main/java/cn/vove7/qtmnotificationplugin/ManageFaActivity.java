@@ -26,6 +26,9 @@ import cn.vove7.qtmnotificationplugin.util.MyApplication;
 import cn.vove7.qtmnotificationplugin.util.SQLOperator;
 import cn.vove7.qtmnotificationplugin.util.SettingsHelper;
 
+import static cn.vove7.qtmnotificationplugin.QTMNotificationListener.TYPE_QQ_TIM;
+import static cn.vove7.qtmnotificationplugin.QTMNotificationListener.TYPE_WECHAT;
+
 /**
  * 管理特别关心，黑名单
  */
@@ -35,6 +38,7 @@ public class ManageFaActivity extends BaseThemeActivity {
    private SearchView searchView;
    private SearchView.SearchAutoComplete mSearchAutoComplete;
    private int pkgType;
+   private String type;
    private int listType;
 
    public static final int PKG_TYPE_QQ_TIM = 10;
@@ -48,6 +52,7 @@ public class ManageFaActivity extends BaseThemeActivity {
       supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
       setContentView(R.layout.activity_manage_fa);
       pkgType = getIntent().getIntExtra("pkgType", PKG_TYPE_QQ_TIM);
+      type = pkgType == PKG_TYPE_QQ_TIM ? TYPE_QQ_TIM : TYPE_WECHAT;
       listType = getIntent().getIntExtra("listType", LIST_TYPE_FA);
       Log.d(this.getClass().getName(), "onCreate: " + pkgType);
       initView();
@@ -86,7 +91,7 @@ public class ManageFaActivity extends BaseThemeActivity {
          }
       });
       listView = $(R.id.search_list);
-      refreshList();
+      refreshList(getAll());
    }
 
    private static final String TAG = "ManageFaActivity";
@@ -119,15 +124,13 @@ public class ManageFaActivity extends BaseThemeActivity {
             String key = (String) objects[1];
             set.add(query);
             SettingsHelper.setValue(key, set);
-            refreshList();
+            searchView.setQuery("",true);
             return false;
          }
 
          @Override
          public boolean onQueryTextChange(String newText) {
-            //Cursor cursor1=new SQLOperator(ManageFaActivity.this).searchNickname(newText,TYPE_QQ_TIM);
-            //searchView.getSuggestionsAdapter().changeCursor(cursor1);
-            //Log.d(TAG, "onQueryTextChange: ->" + newText + "  suggestion count：");
+            refreshList(queryAlike(newText));
             return false;
          }
       });
@@ -172,14 +175,32 @@ public class ManageFaActivity extends BaseThemeActivity {
       return objects;
    }
 
-   private void refreshList() {
-      Set<String> fas = (Set) getSetAndKey()[0];
+   private ArrayList[] getAll() {
       ArrayList[] lists = new ArrayList[2];
-
+      Set<String> fas = (Set<String>) getSetAndKey()[0];
       lists[0] = new ArrayList<>(fas);
-      ArrayList<String> names = new SQLOperator(this).getNickname(pkgType, lists[0]);
+      ArrayList<String> names = new SQLOperator(this).getAllNickname(
+              type, (ArrayList<String>) lists[0]);
       lists[1] = names;
+      return lists;
+   }
 
+   private ArrayList[] queryAlike(String query) {
+      ArrayList[] lists = new ArrayList[2];
+      lists[0] = new ArrayList();
+      Set<String> set = (Set) getSetAndKey()[0];
+      for (String name : set) {
+         if (name.contains(query)) {
+            lists[0].add(name);
+         }
+      }
+
+      lists[1] = new SQLOperator(this).queryNickname(query, type, lists[0]);
+      return lists;
+   }
+
+
+   private void refreshList(ArrayList[] lists) {
       LinearLayoutManager linear_lm = new LinearLayoutManager(this);
       linear_lm.setOrientation(LinearLayoutManager.VERTICAL);//
       listView.setLayoutManager(linear_lm);
