@@ -12,31 +12,44 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import cn.vove7.easytheme.BaseThemeActivity;
 import cn.vove7.easytheme.EasyTheme;
 import cn.vove7.easytheme.ThemeSet;
 import cn.vove7.qtmnotificationplugin.adapter.MultiTitleAdapter;
+import cn.vove7.qtmnotificationplugin.util.MyApplication;
 import cn.vove7.qtmnotificationplugin.util.SQLOperator;
+import cn.vove7.qtmnotificationplugin.util.SettingsHelper;
 
-import static cn.vove7.qtmnotificationplugin.QTMNotificationListener.TYPE_QQ_TIM;
-
+/**
+ * 管理特别关心，黑名单
+ */
 public class ManageFaActivity extends BaseThemeActivity {
 
    private RecyclerView listView;
    private SearchView searchView;
    private SearchView.SearchAutoComplete mSearchAutoComplete;
+   private int pkgType;
+   private int listType;
+
+   public static final int PKG_TYPE_QQ_TIM = 10;
+   public static final int PKG_TYPE_WECHAT = 20;
+   public static final int LIST_TYPE_FA = 1;
+   public static final int LIST_TYPE_BLACK = 2;
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
       setContentView(R.layout.activity_manage_fa);
-      getIntent().getBundleExtra("data");
+      pkgType = getIntent().getIntExtra("pkgType", PKG_TYPE_QQ_TIM);
+      listType = getIntent().getIntExtra("listType", LIST_TYPE_FA);
+      Log.d(this.getClass().getName(), "onCreate: " + pkgType);
       initView();
    }
 
@@ -46,6 +59,10 @@ public class ManageFaActivity extends BaseThemeActivity {
 
    private void initView() {
       Toolbar toolbar = $(R.id.toolbar);
+      if (listType == LIST_TYPE_FA)
+         toolbar.setTitle(R.string.text_manage_fa);
+      else
+         toolbar.setTitle(R.string.text_manage_black_list);
       setSupportActionBar(toolbar);
       if (EasyTheme.currentThemeMode == ThemeSet.ThemeMode.Light) {
          toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
@@ -56,7 +73,7 @@ public class ManageFaActivity extends BaseThemeActivity {
       toolbar.setNavigationOnClickListener(v -> {
          if (mSearchAutoComplete.isShown()) {
             try {
-               //如果搜索框中有文字，则会先清空文字，但网易云音乐是在点击返回键时直接关闭搜索框
+               //如果搜索框中有文字，则会先清空文字
                mSearchAutoComplete.setText("");
                Method method = searchView.getClass().getDeclaredMethod("onCloseClicked");
                method.setAccessible(true);
@@ -69,15 +86,7 @@ public class ManageFaActivity extends BaseThemeActivity {
          }
       });
       listView = $(R.id.search_list);
-      ArrayList<String> names = new SQLOperator(this).getNickname(TYPE_QQ_TIM);
-      ArrayList[] lists = new ArrayList[2];
-      lists[0] = names;
-      lists[1] = names;
-
-      LinearLayoutManager linear_lm=new LinearLayoutManager(this);
-      linear_lm.setOrientation(LinearLayoutManager.VERTICAL);//横滚
-      listView.setLayoutManager(linear_lm);
-      listView.setAdapter(new MultiTitleAdapter(lists, new String[]{"特别关心", "未选"}, new boolean[]{true, false}));
+      refreshList();
    }
 
    private static final String TAG = "ManageFaActivity";
@@ -93,19 +102,24 @@ public class ManageFaActivity extends BaseThemeActivity {
       mSearchAutoComplete = searchView.findViewById(R.id.search_src_text);
       //设置触发查询的最少字符数（默认2个字符才会触发查询）
       mSearchAutoComplete.setThreshold(1);
-      searchView.setQueryHint("搜索昵称记录/自定义提交");
-      searchView.onActionViewExpanded();
+      searchView.setQueryHint(getString(R.string.query_hint));
+      searchView.onActionViewCollapsed();
       searchView.setMaxWidth(20000);
       searchView.setSubmitButtonEnabled(true);
-
-      //Cursor cursor=new SQLOperator(this).getNickname(TYPE_QQ_TIM);
-      //searchView.setSuggestionsAdapter(new SimpleCursorAdapter(ManageFaActivity.this,
-      //        R.layout.search_suggestion_item, cursor, new String[]{"nickname"}, new int[]{R.id.text}));
 
       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
          @Override
          public boolean onQueryTextSubmit(String query) {
             Log.d(TAG, "onQueryTextSubmit: 提交" + query);
+            if (query.trim().equals(""))
+               return true;
+
+            Object[] objects = getSetAndKey(listType + pkgType);
+            Set<String> set = (Set<String>) objects[0];
+            String key = (String) objects[1];
+            set.add(query);
+            SettingsHelper.setValue(key, set);
+            refreshList();
             return false;
          }
 
@@ -113,15 +127,68 @@ public class ManageFaActivity extends BaseThemeActivity {
          public boolean onQueryTextChange(String newText) {
             //Cursor cursor1=new SQLOperator(ManageFaActivity.this).searchNickname(newText,TYPE_QQ_TIM);
             //searchView.getSuggestionsAdapter().changeCursor(cursor1);
-            Log.d(TAG, "onQueryTextChange: ->" + newText + "  suggestion count：");
+            //Log.d(TAG, "onQueryTextChange: ->" + newText + "  suggestion count：");
             return false;
          }
       });
-
       return super.onCreateOptionsMenu(menu);
    }
 
+   private Object[] getSetAndKey() {
+      return getSetAndKey(listType + pkgType);
+   }
+
+   public static Object[] getSetAndKey(int s) {
+      Set<String> set;
+      String key;
+      switch (s) {
+         case 11: {
+            set = SettingsHelper.getFaSetQQ();
+            key = MyApplication.getInstance().getMainActivity().getString(R.string.key_fas_qq);
+         }
+         break;
+         case 21: {
+            set = SettingsHelper.getFaSetWechat();
+            key = MyApplication.getInstance().getMainActivity().getString(R.string.key_fas_wechat);
+         }
+         break;
+         case 12: {
+            set = SettingsHelper.getBlackListQQ();
+            key = MyApplication.getInstance().getMainActivity().getString(R.string.key_black_list_qq);
+         }
+         break;
+         case 22: {
+            set = SettingsHelper.getBlackListWechat();
+            key = MyApplication.getInstance().getMainActivity().getString(R.string.key_black_list_wechat);
+         }
+         break;
+         default:
+            set = new HashSet<>();
+            key = "";
+      }
+      Object[] objects = new Object[2];
+      objects[0] = set;
+      objects[1] = key;
+      return objects;
+   }
+
+   private void refreshList() {
+      Set<String> fas = (Set) getSetAndKey()[0];
+      ArrayList[] lists = new ArrayList[2];
+
+      lists[0] = new ArrayList<>(fas);
+      ArrayList<String> names = new SQLOperator(this).getNickname(pkgType, lists[0]);
+      lists[1] = names;
+
+      LinearLayoutManager linear_lm = new LinearLayoutManager(this);
+      linear_lm.setOrientation(LinearLayoutManager.VERTICAL);//
+      listView.setLayoutManager(linear_lm);
+      String title = listType == LIST_TYPE_FA ? "特别关心" : "黑名单";
+      listView.setAdapter(new MultiTitleAdapter(pkgType, listType,
+              lists, new String[]{title, "好友"}, new boolean[]{true, false}));
+   }
+
    public void done(View view) {
-      Toast.makeText(this, "done", Toast.LENGTH_SHORT).show();
+      finish();
    }
 }

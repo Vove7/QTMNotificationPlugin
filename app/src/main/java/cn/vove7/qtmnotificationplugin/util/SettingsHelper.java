@@ -7,7 +7,9 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.annotation.StringRes;
+import android.util.Log;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import cn.vove7.qtmnotificationplugin.R;
@@ -73,12 +75,11 @@ public class SettingsHelper {
       } else if (val instanceof Set) {
          editor.putStringSet(key, (Set<String>) val);
       }
-      editor.apply();
+      boolean b = editor.commit();
+
+      Log.d(SettingsHelper.class.getName(), "setValue: success:" + b);
    }
 
-   public static int getThemeId() {
-      return getInt((R.string.key_easy_theme), 0);
-   }
 
    public static boolean isNoDistrubingOnQQ() {
       return getBoolean(R.string.key_is_no_distrubing_qq, false);
@@ -94,7 +95,7 @@ public class SettingsHelper {
    }
 
    public static String getNoDistrubingEndTimeQQ() {
-      return getString(R.string.key_no_disturbing_end_qq, "6:00");
+      return getString(R.string.key_no_disturbing_end_qq, "06:00");
    }
 
    public static String getNoDistrubingBeginTimeWechat() {
@@ -102,7 +103,7 @@ public class SettingsHelper {
    }
 
    public static String getNoDistrubingEndTimeWechat() {
-      return getString(R.string.key_no_disturbing_end_wechat, "6:00");
+      return getString(R.string.key_no_disturbing_end_wechat, "06:00");
    }
 
    public static boolean isOpenFaOnNDQQ() {
@@ -124,6 +125,7 @@ public class SettingsHelper {
    public static int getInt(@StringRes int keyId, int d) {
       return preferences.getInt($(keyId), d);
    }
+
    public static int getInt(String key, int d) {
       return preferences.getInt(key, d);
    }
@@ -137,20 +139,21 @@ public class SettingsHelper {
    }
 
    public static Set<String> getFaSetQQ() {
-      return getStringSet((R.string.key_fas_qq), null);
+      return new HashSet<>(getStringSet((R.string.key_fas_qq), new HashSet<>()));
    }
 
    public static Set<String> getFaSetWechat() {
-      return getStringSet((R.string.key_fas_wechat), null);
+      return new HashSet<>(getStringSet((R.string.key_fas_wechat), new HashSet<>()));
    }
 
    public static Set<String> getBlackListQQ() {
-      return getStringSet((R.string.key_black_list_qq), null);
+      return new HashSet<>(getStringSet((R.string.key_black_list_qq), new HashSet<>()));
    }
 
 
    public static Set<String> getBlackListWechat() {
-      return getStringSet((R.string.key_black_list_wechat), null);
+      return new HashSet<>(getStringSet(
+              (R.string.key_black_list_wechat), new HashSet<>()));
    }
 
    public static boolean getTotalSwitchQQ() {

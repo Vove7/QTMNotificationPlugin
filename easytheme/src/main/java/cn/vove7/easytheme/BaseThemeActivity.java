@@ -30,6 +30,12 @@ public class BaseThemeActivity extends AppCompatActivity {
          actionBar.hide();
       }
    }
+   public void showActionBar(){
+      ActionBar actionBar = getSupportActionBar();
+      if(actionBar!=null){
+         actionBar.show();
+      }
+   }
    @Override
    protected void onResume() {
       super.onResume();

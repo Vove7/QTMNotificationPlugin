@@ -17,24 +17,24 @@
         android:textStyle="bold" />
 
     <LinearLayout
+        android:id="@+id/item"
         android:layout_width="match_parent"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="15dp"
         android:orientation="horizontal">
 
         <TextView
             android:textSize="16sp"
             android:id="@+id/item_text"
-            android:background="?android:attr/selectableItemBackground"
             android:layout_width="0dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <CheckBox
             android:id="@+id/item_check"
+            android:clickable="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

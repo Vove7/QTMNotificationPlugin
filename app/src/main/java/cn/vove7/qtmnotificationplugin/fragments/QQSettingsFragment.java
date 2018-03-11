@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,37 +14,14 @@ import cn.vove7.qtmnotificationplugin.R;
 import cn.vove7.qtmnotificationplugin.util.SettingsHelper;
 import cn.vove7.qtmnotificationplugin.util.Utils;
 
+import static cn.vove7.qtmnotificationplugin.ManageFaActivity.LIST_TYPE_BLACK;
+import static cn.vove7.qtmnotificationplugin.ManageFaActivity.LIST_TYPE_FA;
+import static cn.vove7.qtmnotificationplugin.ManageFaActivity.PKG_TYPE_QQ_TIM;
+
 public class QQSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
 
    public QQSettingsFragment() {
-   }/*
-   public static final Integer[] vibratorOptionsQQ = new Integer[]{
-           R.string.key_vibrator_strength_qq,
-           R.string.key_repeat_num_qq
-   };
-   public static final Integer[] noDistrubingOptionsQQ = new Integer[]{
-           R.string.key_no_disturbing_begin_qq,
-           R.string.key_no_disturbing_end_qq,
-           R.string.key_is_fa_no_distrubing_qq
-   };
-   public static final Integer[] alarmOptionsQQ = new Integer[]{R.string.key_ringtone_qq};
-   public static final Integer[][] allOptionsQQ = new Integer[][]{{
-           0, R.string.key_mode_qq}, {
-           1, R.string.key_is_vibrator_qq,
-           R.string.key_vibrator_strength_qq,
-           R.string.key_repeat_num_qq}, {
-           1, R.string.key_is_alarm_qq,
-           R.string.key_ringtone_qq}, {
-           1, R.string.key_is_no_distrubing_qq,
-           R.string.key_no_disturbing_begin_qq,
-           R.string.key_no_disturbing_end_qq,
-           R.string.key_is_fa_no_distrubing_qq}*//*, {
-           0, R.string.key_fas_qq,
-           R.string.key_fa_ringtone_qq}*//*, {
-           0, R.string.key_black_list_qq}
-   };
-*/
-
+   }
    private static final int[] listenerOptionsQQ = new int[]{
            R.string.key_is_vibrator_qq,
            R.string.key_is_alarm_qq,
@@ -58,12 +34,9 @@ public class QQSettingsFragment extends PreferenceFragment implements Preference
    private Map<String, String> mode;
 
    @Override
-   public void onCreate(@Nullable Bundle savedInstanceState) {
+   public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       addPreferencesFromResource(R.xml.preferences_qq);
-      //for (int id : listenerOptionsQQ) {
-      //   findPreference($(id)).setOnPreferenceChangeListener(this);
-      //}
       mode = new HashMap<>();
       mode.put($(R.string.mode_default), $(R.string.text_default));
       mode.put($(R.string.mode_only_screen_off), $(R.string.text_only_screen_off));
@@ -71,14 +44,33 @@ public class QQSettingsFragment extends PreferenceFragment implements Preference
 
       //SettingsHelper.setOptionEnabled(this, allOptionsQQ, SettingsHelper.getTotalSwitchQQ());
       initPreferenceView();
-      findPreference(getString(R.string.key_fas_qq)).setOnPreferenceClickListener(preference -> {
-         startActivity(new Intent(QQSettingsFragment.this.getActivity(), ManageFaActivity.class));
-         return false;
-      });
+      setListenerOptionsQQ();
    }
-
    private String $i(int v) {
       return String.valueOf(v);
+   }
+
+   private void setListenerOptionsQQ() {
+
+      findPreference(getString(R.string.key_fas_qq)).setOnPreferenceClickListener(preference -> {
+         Intent intent = new Intent(QQSettingsFragment.this.getActivity(), ManageFaActivity.class);
+         intent.putExtra("pkgType", PKG_TYPE_QQ_TIM);
+         intent.putExtra("listType",LIST_TYPE_FA);
+         startActivity(intent);
+         return false;
+      });
+
+      findPreference(getString(R.string.key_black_list_qq)).setOnPreferenceClickListener(preference -> {
+         Intent intent = new Intent(QQSettingsFragment.this.getActivity(), ManageFaActivity.class);
+         intent.putExtra("pkgType", PKG_TYPE_QQ_TIM);
+         intent.putExtra("listType",LIST_TYPE_BLACK);
+         startActivity(intent);
+         return false;
+      });
+
+      for (int key : listenerOptionsQQ) {
+         findPreference($(key)).setOnPreferenceChangeListener(this);
+      }
    }
 
    private void initPreferenceView() {

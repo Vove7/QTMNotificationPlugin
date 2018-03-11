@@ -133,7 +133,7 @@ public class EasyTheme {
    }
 
    /**
-    * 切换模式 Light->Dark->ABlack
+    * 切换模式 Light Dark ABlack
     *
     * @param context Context
     */

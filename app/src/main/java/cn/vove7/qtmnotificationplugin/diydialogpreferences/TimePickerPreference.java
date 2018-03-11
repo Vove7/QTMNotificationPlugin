@@ -1,11 +1,13 @@
 package cn.vove7.qtmnotificationplugin.diydialogpreferences;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TimePicker;
@@ -39,13 +41,15 @@ public class TimePickerPreference extends DialogPreference {
    private int defaultHour;
    private int defaultMinute;
 
+   @SuppressLint("DefaultLocale")
    @Override
    protected View onCreateView(ViewGroup parent) {
 
       currentTime = SettingsHelper.getPreference(getKey());
       if (currentTime == null) {
-         currentTime = defaultHour + ":" + defaultMinute;
+         currentTime = String.format("%02d:%02d", defaultHour, defaultMinute);
       }
+      Log.d(this.getClass().getName(), "onCreateView: " + currentTime);
       setSummary(currentTime);
       return super.onCreateView(parent);
    }
@@ -55,7 +59,6 @@ public class TimePickerPreference extends DialogPreference {
       setDialogLayoutResource(R.layout.dialog_time_picker);
       return super.onCreateDialogView();
    }
-
    private String currentTime;
 
    @Override
@@ -76,13 +79,14 @@ public class TimePickerPreference extends DialogPreference {
       return timePicker;
    }
 
+   @SuppressLint("DefaultLocale")
    @Override
    public void onClick(DialogInterface dialogInterface, int which) {
       switch (which) {
          case Dialog.BUTTON_POSITIVE:
             //OK
-            currentTime = timePicker.getCurrentHour() + ":" +
-                    timePicker.getCurrentMinute();
+            currentTime = String.format("%02d:%02d", timePicker.getCurrentHour(),
+                    timePicker.getCurrentMinute());
             SettingsHelper.setValue(getKey(), currentTime);
             setSummary(currentTime);
             break;

@@ -56,7 +56,7 @@
             android:title="@string/text_ringtone" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/text_black_list">
-        <EditTextPreference
+        <Preference
             android:key="@string/key_black_list_qq"
             android:summary="@string/summary_black_list"
             android:title="@string/text_manage_black_list" />

@@ -1,5 +1,6 @@
 package cn.vove7.qtmnotificationplugin.adapter;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,10 +10,15 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Set;
 
+import cn.vove7.qtmnotificationplugin.ManageFaActivity;
 import cn.vove7.qtmnotificationplugin.R;
+import cn.vove7.qtmnotificationplugin.util.SettingsHelper;
 
 public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.ViewHolder> {
+   private int pkgType;
+   private int listType;
    private ArrayList<String>[] lists;
    private String[] titles;
    private boolean[] checks;
@@ -32,7 +38,10 @@ public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.Vi
       }
    }
 
-   public MultiTitleAdapter(ArrayList<String>[] lists, String[] titles, boolean[] checks) {
+   public MultiTitleAdapter(int pkgType, int listType, ArrayList<String>[] lists,
+                            String[] titles, boolean[] checks) {
+      this.listType = listType;
+      this.pkgType = pkgType;
       this.lists = lists;
       this.titles = titles;
       this.checks = checks;
@@ -41,20 +50,34 @@ public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.Vi
       }
    }
 
+   @NonNull
    @Override
-   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-      View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_item, parent, false);
+   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+      View view = LayoutInflater.from(parent.getContext())
+              .inflate(R.layout.search_item, parent, false);
       final ViewHolder holder = new ViewHolder(view);
-      holder.nickname.setOnClickListener(view1 -> {
-         int pos = holder.getAdapterPosition();
-         toggleStatus();
-
+      holder.itemView.setOnClickListener(view1 -> {
+         String nickName = holder.nickname.getText().toString();
+         if (!nickName.equals(""))
+            toggleStatus(holder.checkBox, nickName);
       });
       return holder;
    }
 
-   private void toggleStatus() {
+   private void toggleStatus(CheckBox checkBox, String n) {
+      checkBox.toggle();
+      Object[] objects = ManageFaActivity.getSetAndKey(pkgType + listType);
+      Set<String> set = (Set) objects[0];
+      String key = (String) objects[1];
 
+      if (checkBox.isChecked()) {
+         set.add(n);
+      } else {
+         set.remove(n);
+      }
+      SettingsHelper.setValue(key, set);
+
+      //
    }
 
 
@@ -83,10 +106,11 @@ public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.Vi
    public void onBindViewHolder(ViewHolder holder, int position) {
       int nowGroupIndex = calNowGroupIndex(position);
       int index = position - getGroupNum(nowGroupIndex);
-      Log.d(TAG, "onBindViewHolder: 当前pos->" + position + " nowGroup->" + nowGroupIndex + " index-> " + index);
+      Log.d(TAG, "onBindViewHolder: 当前pos->" + position +
+              " nowGroup->" + nowGroupIndex + " index-> " + index);
 
       if (index == 0) {//标题
-         Log.d(TAG, "onBindViewHolder: 标题->"+titles[nowGroupIndex]);
+         Log.d(TAG, "onBindViewHolder: 标题->" + titles[nowGroupIndex]);
          holder.title.setText(titles[nowGroupIndex]);
          holder.title.setVisibility(View.VISIBLE);
          holder.nickname.setVisibility(View.GONE);
@@ -96,7 +120,7 @@ public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.Vi
          holder.nickname.setVisibility(View.VISIBLE);
          holder.checkBox.setVisibility(View.VISIBLE);
          String s = lists[nowGroupIndex].get(index - 1);
-         Log.d(TAG, "onBindViewHolder: 元素->"+s);
+         Log.d(TAG, "onBindViewHolder: 元素->" + s);
          holder.checkBox.setChecked(checks[nowGroupIndex]);
          holder.nickname.setText(s);
       }

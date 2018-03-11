@@ -66,9 +66,8 @@ public class ExampleUnitTest {
 
    @Test
    public void t() {
-      Map<String, Integer> map = new HashMap<>();
-      map.put("1", 1);
-      System.out.print(map.get("2"));
+      int i=3;
+      System.out.print(String.format("i=%03d",i));
    }
 
    @Test

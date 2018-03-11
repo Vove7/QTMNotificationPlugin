@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 

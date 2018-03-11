@@ -48,11 +48,13 @@ public class QTMNotificationListener extends NotificationListenerService {
       Log.d(TAG, "QTM提醒已下线");
       isConnect = false;
    }
-   public static final String TYPE_QQ_TIM="QQ/TIM";
-   public static final String TYPE_WECHAT="WECHAT";
 
-   private static final int TYPE_NOT_NOTIFY = 152;
+   public static final String TYPE_QQ_TIM = "QQ/TIM";
+   public static final String TYPE_WECHAT = "WECHAT";
+
+   private static final int TYPE_QQ_DIAL = 510;
    private static final int TYPE_QQ_OK = 102;
+   private static final int TYPE_QQ_BACKGROUND = 488;
    private static final int TYPE_QQ_ZONE = 76;
    private static final int TYPE_QQ_PC_LOGIN = 520;
    private static final int TYPE_QQ_RELEVANCE = 444;
@@ -107,7 +109,7 @@ public class QTMNotificationListener extends NotificationListenerService {
 
    private void notifyQQOrTim(String title, String content) {
       boolean totalSwitch = SettingsHelper.isTotalSwitchQQ();
-      int notificationType = parseQQNotificationType(title, content);//放入昵称
+      int notificationType = parseQQNotificationType(title, content);
       if (!totalSwitch) {
          return;
       }
@@ -125,7 +127,7 @@ public class QTMNotificationListener extends NotificationListenerService {
       }
       //blacklist
       Set<String> blackList = SettingsHelper.getBlackListQQ();
-      if (blackList != null && blackList.contains(nickname)) {
+      if (blackList.contains(nickname)) {
          Log.d(TAG, "notifyQQOrTim: in black list: " + nickname);
          return;
       }
@@ -142,17 +144,23 @@ public class QTMNotificationListener extends NotificationListenerService {
             return;
          }
       }
+      String ringtone = SettingsHelper.getRingtoneQQ();
+      boolean isFa = isFaQQ(nickname);
+      if (isFa)
+         ringtone = SettingsHelper.getFaRingtoneQQ();
       switch (mode) {
          case MODE_ONLY_FA: {
-            if (!isFaQQ(nickname)) {//不是特别关心
+            if (!isFa) {//不是特别关心
                Log.d(TAG, "notifyQQOrTim: not fa ");
                return;
             }
+            Log.d(this.getClass().getName(), "notifyQQOrTim: in fa list" + nickname);
          }
          case MODE_DEFAULT: {//默认
             switch (notificationType) {
-               case TYPE_NOT_NOTIFY:
+               case TYPE_QQ_DIAL:
                   return;
+               case TYPE_QQ_BACKGROUND:
                case TYPE_QQ_PC_LOGIN:
                   return;
                case TYPE_QQ_OK:
@@ -164,7 +172,6 @@ public class QTMNotificationListener extends NotificationListenerService {
                   int vibratorStrength = SettingsHelper.getVibratorStrengthQQ();
                   int repeatNum = SettingsHelper.getRepeatNumQQ();
                   boolean isAlarm = SettingsHelper.isAlarmQQ();
-                  String ringtone = SettingsHelper.getRingtoneQQ();
                   if (isVibrator)
                      Utils.notificationVibrator(this,
                              vibratorStrength,
@@ -186,22 +193,86 @@ public class QTMNotificationListener extends NotificationListenerService {
 
    private boolean isFaQQ(String nickname) {
       Set<String> faSet = SettingsHelper.getFaSetQQ();
-      return faSet != null && faSet.contains(nickname);
+      return faSet.contains(nickname);
+   }
+
+   private boolean isFaWechat(String nickname) {
+      Set<String> faSet = SettingsHelper.getFaSetWechat();
+      return faSet.contains(nickname);
    }
 
    private void notifyWechat(String title, String content) {
+      boolean totalSwitch = SettingsHelper.isTotalSwitchWeChat();
+      int notificationType = parseWechatNotificationType(title, content);
 
-      boolean isVibrator = SettingsHelper.isVibratorWechat();
-      int vibratorStrength = SettingsHelper.getVibratorStrengthWechat();
-      int repeatNum = SettingsHelper.getRepeatNumWechat();
-      boolean isAlarm = SettingsHelper.isAlarmWechat();
+      if (!totalSwitch) {
+         return;
+      }
+
+      //消息类型
+      String mode = SettingsHelper.getModeWechat();
+      //仅熄屏
+      if ((SettingsHelper.isOnlyScreenOffWechat())
+              && Utils.isScreenOn(this)) {
+         Log.d(TAG, "notifyWechat: screen on");
+         return;
+      }
       String ringtone = SettingsHelper.getRingtoneWechat();
-      if (isVibrator)
-         Utils.notificationVibrator(this,
-                 vibratorStrength,
-                 repeatNum);
-      if (isAlarm)
-         Utils.startAlarm(this, ringtone);
+      String nickname = title;
+      boolean isFa = isFaWechat(nickname);
+      switch (mode) {
+         case MODE_ONLY_FA: {
+            if (!isFa) {//不是特别关心
+               Log.d(TAG, "notifyWechat: not fa ");
+               return;
+            }
+         }
+         case MODE_DEFAULT:
+            switch (notificationType) {
+               case TYPE_WECHAT_DIALOG:
+               case TYPE_WECHAT_PAL: {
+                  return;
+               }
+               case TYPE_WECHAT_OK: {
+                  //blacklist
+                  Set<String> blackList = SettingsHelper.getBlackListWechat();
+                  if (blackList.contains(nickname)) {
+                     Log.d(TAG, "notifyWechat: in black list: " + nickname);
+                     return;
+                  }
+                  //免打扰
+                  boolean isNoDistrubingQuantum = SettingsHelper.isNoDistrubingOnWechat();
+                  String begin = SettingsHelper.getNoDistrubingBeginTimeWechat();
+                  String end = SettingsHelper.getNoDistrubingEndTimeWechat();
+
+                  if (isNoDistrubingQuantum && Utils.inTimeQuantum(begin, end, null)) {
+                     Log.d(TAG, "notifyWechat: no distrubing time quantum");
+                     boolean isFaOnND = SettingsHelper.isOpenFaOnNDWechat();
+                     if (!(isFaOnND && isFaWechat(nickname))) {//没打开 或者打开不在特别关心中
+                        Log.d(TAG, "notifyWechat: 没打开 或者不在特别关心中");
+                        return;
+                     }
+                  }
+
+                  new SQLOperator(this).insertNickname(title, TYPE_WECHAT);
+
+                  boolean isVibrator = SettingsHelper.isVibratorWechat();
+                  int vibratorStrength = SettingsHelper.getVibratorStrengthWechat();
+                  int repeatNum = SettingsHelper.getRepeatNumWechat();
+                  boolean isAlarm = SettingsHelper.isAlarmWechat();
+                  if (isVibrator)
+                     Utils.notificationVibrator(this,
+                             vibratorStrength,
+                             repeatNum);
+                  if (isAlarm)
+                     Utils.startAlarm(this, ringtone);
+
+
+               }
+            }
+      }
+
+
    }
 
    /**
@@ -209,18 +280,20 @@ public class QTMNotificationListener extends NotificationListenerService {
     *
     * @param title   标题
     * @param content 内容
-    * @return 返回类型
+    * @return 类型
     */
    private int parseQQNotificationType(String title, String content) {
       //QQ后台语音通话 or 后台提示
-      if (title == null || ("QQ".equals(title) && "QQ正在后台运行".equals(content))) {
-         Log.d(TAG, "parseQQNotificationType: title:null");
-         return TYPE_NOT_NOTIFY;
+      if (title == null) {
+         return TYPE_QQ_DIAL;
       }
       Matcher matcher = Pattern.compile("QQ空间动态(\\(共(\\d+)条未读\\))?$").matcher(title);
       if (matcher.find()) {
          Log.d(TAG, "parseQQNotificationType: QQ空间");
          return TYPE_QQ_ZONE;
+      }
+      if (content.contains("正在后台运行")) {
+         return TYPE_QQ_BACKGROUND;
       }
       switch (title) {
          case "你的帐号在电脑登录":
@@ -238,6 +311,7 @@ public class QTMNotificationListener extends NotificationListenerService {
          case "朋友通知":
             return TYPE_QQ_FRIEND;
       }
+
       //好友-群-组..
       Log.d(TAG, "parseQQNotificationType: 普通消息");
       return TYPE_QQ_OK;
@@ -264,4 +338,28 @@ public class QTMNotificationListener extends NotificationListenerService {
       }
       return title;
    }
+
+   /**
+    * 解析Wechat通知
+    *
+    * @param title   标题
+    * @param content 内容
+    * @return 类型
+    */
+   private int parseWechatNotificationType(String title, String content) {
+      switch (content) {
+         case "语音通话中,轻击以继续":
+            return TYPE_WECHAT_DIALOG;
+      }
+      switch (title) {
+         case "微信支付":
+            return TYPE_WECHAT_PAL;
+
+      }
+      return TYPE_WECHAT_OK;
+   }
+
+   private static final int TYPE_WECHAT_DIALOG = 240;
+   private static final int TYPE_WECHAT_PAL = 527;
+   private static final int TYPE_WECHAT_OK = 4;
 }

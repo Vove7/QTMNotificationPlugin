@@ -46,7 +46,7 @@
             android:title="@string/text_ringtone" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/text_fa">
-        <EditTextPreference
+        <Preference
             android:title="@string/text_manage_fa"
             android:key="@string/key_fas_wechat"/>
         <RingtonePreference
@@ -55,7 +55,7 @@
             android:key="@string/key_fa_ringtone_wechat"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/text_black_list">
-        <EditTextPreference android:title="@string/text_manage_black_list"
+        <Preference android:title="@string/text_manage_black_list"
             android:summary="@string/summary_black_list"
             android:key="@string/key_black_list_wechat"/>
     </PreferenceCategory>

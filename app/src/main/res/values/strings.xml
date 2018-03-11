@@ -120,5 +120,6 @@
     <string name="text_manage_black_list">管理黑名单</string>
     <string name="summary_black_list">不提醒来自黑名单</string>
     <string name="text_random_change_skin">随机换肤</string>
+    <string name="query_hint">搜索昵称记录/自定义</string>
 
 </resources>

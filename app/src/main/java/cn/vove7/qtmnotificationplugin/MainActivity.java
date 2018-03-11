@@ -1,6 +1,5 @@
 package cn.vove7.qtmnotificationplugin;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -10,10 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +29,7 @@ public class MainActivity extends BaseThemeActivity {
    //TimSettingsFragment timSettingsFragment = new TimSettingsFragment();
    WechatSettingsFragment wechatSettingsFragment = new WechatSettingsFragment();
 
+   //ViewPager viewPager;
    static int index = 0;
    private long oldTime = 0;
    private int type = 0;
@@ -52,6 +51,7 @@ public class MainActivity extends BaseThemeActivity {
                return false;
             }
             type = 1;
+            //viewPager.setCurrentItem(0);
             switchFragment(qqSettingsFragment);
             return true;
          //case R.id.navigation_tim:
@@ -68,6 +68,7 @@ public class MainActivity extends BaseThemeActivity {
                return false;
             } else {
                type = 3;
+               //viewPager.setCurrentItem(1);
                switchFragment(wechatSettingsFragment);
                return true;
             }
@@ -75,20 +76,62 @@ public class MainActivity extends BaseThemeActivity {
       return false;
    };
 
+   FrameLayout frameLayout;
+
+   private void initFragment() {
+      frameLayout = findViewById(R.id.fragment);
+      manager=getFragmentManager();
+      switchFragment(qqSettingsFragment);
+      //viewPager=findViewById(R.id.fragment);
+      //List<Fragment> list=new ArrayList<>();
+      //list.add(qqSettingsFragment);
+      //list.add(wechatSettingsFragment);
+      //FragmentAdapter adapter=new FragmentAdapter(getSupportFragmentManager(),list);
+      //viewPager.setAdapter(adapter);
+      //viewPager.setCurrentItem(0);
+   }
+
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       SettingsHelper.initPreference(this);
       MyApplication.getInstance().setMainActivity(this);
       super.onCreate(savedInstanceState);
-      hideActionBar();
-      setContentView(R.layout.activity_main);
 
+      setContentView(R.layout.activity_main);
+      hideActionBar();
       BottomNavigationView navigation = findViewById(R.id.navigation);
       navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-      currentFragment = currentFragment == null ? qqSettingsFragment : currentFragment;
-      switchFragment(currentFragment);//
-   }
 
+      initFragment();
+
+
+      Toolbar toolbar = findViewById(R.id.toolbar);
+      toolbar.inflateMenu(R.menu.main_menu);
+      toolbar.setOnMenuItemClickListener(item -> {
+                 Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
+                 switch (item.getItemId()) {
+                    case R.id.menu_about: {
+
+                    }
+                    break;
+                    case R.id.menu_donate: {
+
+                    }
+                    break;
+                    case R.id.menu_help: {
+
+                    }
+                    break;
+                    case R.id.menu_change_skin: {
+                       //applyTheme(EasyTheme.isDark);
+                    }
+                    break;
+                 }
+                 return false;
+              }
+      );
+      //setSupportActionBar(toolbar);
+   }
 
    private void checkNotificationAccessPermission() {
       closeRequestDialog();//关闭询问窗口
@@ -176,60 +219,11 @@ public class MainActivity extends BaseThemeActivity {
       return super.onKeyDown(keyCode, event);
    }
 
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      getMenuInflater().inflate(R.menu.main_menu, menu);
-      return super.onCreateOptionsMenu(menu);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      //Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
-      switch (item.getItemId()) {
-         case R.id.menu_about: {
-
-         }
-         break;
-         case R.id.menu_donate: {
-
-         }
-         break;
-         case R.id.menu_help: {
-
-         }
-         break;
-         case R.id.menu_change_skin: {
-            //applyTheme(EasyTheme.isDark);
-         }
-         break;
-      }
-      return false;
-   }
-
-   @SuppressLint("StaticFieldLeak")
-   private Fragment currentFragment = null;
-   FragmentManager manager = getFragmentManager();
-
+   private Fragment currentFragment;
+   private FragmentManager manager;
    private void switchFragment(Fragment targetFragment) {
       currentFragment = targetFragment;
       manager.beginTransaction().replace(R.id.fragment, targetFragment).commit();
-
-      //android.support.v4.Fragment下
-      //if (targetFragment == currentFragment) return;
-      //FragmentTransaction transaction = getSupportFragmentManager()
-      //        .beginTransaction();
-      //if (!targetFragment.isAdded()) {
-      //   //第一次使用switchFragment()时currentFragment为null，所以要判断一下
-      //   if (currentFragment != null) {
-      //      transaction.hide(currentFragment);
-      //   }
-      //   transaction.add(R.id.fragment, targetFragment, targetFragment.getClass().getName());
-      //} else {
-      //   transaction.hide(currentFragment)
-      //           .show(targetFragment);
-      //}
-      //currentFragment = targetFragment;
-      //transaction.commit();
    }
 
 }

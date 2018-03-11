@@ -7,6 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
+import static cn.vove7.qtmnotificationplugin.ManageFaActivity.PKG_TYPE_QQ_TIM;
+import static cn.vove7.qtmnotificationplugin.QTMNotificationListener.TYPE_QQ_TIM;
+import static cn.vove7.qtmnotificationplugin.QTMNotificationListener.TYPE_WECHAT;
+
 public class SQLOperator {
    private Context context;
    private SQLiteHelper sqLiteHelper;
@@ -56,11 +60,24 @@ public class SQLOperator {
       return b;
    }
 
-   public ArrayList<String> getNickname(String type) {
+   public ArrayList<String> getNickname(int pkgType, ArrayList<String> notIn) {
+      StringBuilder notInBuilder = null;
+      if (notIn != null && notIn.size() > 0) {
+         notInBuilder = new StringBuilder("'" + notIn.get(0) + "'");
+         for (int i = 1; i < notIn.size(); i++) {
+            notInBuilder.append(",'").append(notIn.get(i)).append("'");
+         }
+      }
+
       SQLiteDatabase database = new SQLiteHelper(context).getReadableDatabase();
-      Cursor cursor = database.rawQuery("select nickname from " + SQLiteHelper.TABLE_NICKNAME +
-                      " where type=?",
-              new String[]{type});
+      StringBuilder sqlBuilder = new StringBuilder("select nickname from " + SQLiteHelper.TABLE_NICKNAME +
+              " where type=?");
+      if (notInBuilder != null) {
+         sqlBuilder.append(" and nickname not in (").append(notInBuilder.toString()).append(")");
+      }
+
+      Cursor cursor = database.rawQuery(sqlBuilder.toString(),
+              new String[]{pkgType == PKG_TYPE_QQ_TIM ? TYPE_QQ_TIM : TYPE_WECHAT});
       ArrayList<String> list = new ArrayList<>();
       while (cursor.moveToNext()) {
          list.add(cursor.getString(0));

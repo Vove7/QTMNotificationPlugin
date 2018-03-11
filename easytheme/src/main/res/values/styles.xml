@@ -255,15 +255,18 @@
     </style>
 
     <!--防止白色启动背景-->
-    <style name="StartBackground">
+    <style name="StartBackground" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowBackground">@color/start_background</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
     <!-- Base application theme. -->
-    <style name="BaseLight" parent="Theme.AppCompat.Light.DarkActionBar" />
+    <style name="BaseLight" parent="Theme.AppCompat.Light.DarkActionBar" >
+        <item name="android:actionBarStyle">@style/ActionBar_Light</item>
+    </style>
 
     <style name="BaseDark" parent="Theme.Design.NoActionBar">
         <!-- 黑色 加上标题栏-->
+        <item name="android:actionBarStyle">@style/ActionBar_Light</item>
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">false</item>
     </style>
@@ -272,7 +275,17 @@
         <!--<item name="colorPrimaryDark">@color/md_black_1000</item>-->
         <item name="android:navigationBarColor">@color/md_black_1000</item>
         <item name="android:colorBackground">@color/md_black_1000</item>
-
+        <item name="android:actionBarStyle">@style/ActionBar_Dark</item>
     </style>
 
+    <style name="ActionBar_Light">
+        <item name="android:background">?attr/colorAccent</item>
+        <item name="android:elevation">10dp</item>
+        <item name="android:colorControlNormal">#fff</item>
+    </style>
+    <style name="ActionBar_Dark">
+        <item name="android:background">#000</item>
+        <item name="android:elevation">10dp</item>
+        <item name="android:colorControlNormal">#fff</item>
+    </style>
 </resources>

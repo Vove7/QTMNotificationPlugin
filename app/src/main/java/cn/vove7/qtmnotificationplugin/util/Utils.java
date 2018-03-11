@@ -104,25 +104,27 @@ public class Utils {
       }
    }
 
+   private static Ringtone ringtone;
+
    public static void startAlarm(Context context, String ring) {
       Uri uri;
-      Ringtone ringtone;
       if (ring == null || ring.equals("")) {
          uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
          if (uri == null) return;
       } else {
          uri = Uri.parse(ring);
       }
+      if (ringtone != null && ringtone.isPlaying())
+         ringtone.stop();
       ringtone = RingtoneManager.getRingtone(context, uri);
       ringtone.play();
    }
 
    public static String getRingtoneTitleFromUri(Context context, String uri) {
       if (TextUtils.isEmpty(uri)) {
-         return null;
+         return "";
       }
       Ringtone ringtone = RingtoneManager.getRingtone(context, Uri.parse(uri));
       return ringtone.getTitle(context);
-
    }
 }
