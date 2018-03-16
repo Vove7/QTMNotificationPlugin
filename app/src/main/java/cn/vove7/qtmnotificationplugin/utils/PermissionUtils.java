@@ -1,4 +1,4 @@
-package cn.vove7.qtmnotificationplugin.util;
+package cn.vove7.qtmnotificationplugin.utils;
 
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.ActivityNotFoundException;
@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.accessibility.AccessibilityManager;
 
 import java.util.List;

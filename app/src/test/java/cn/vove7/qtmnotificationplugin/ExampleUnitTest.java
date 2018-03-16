@@ -3,14 +3,12 @@ package cn.vove7.qtmnotificationplugin;
 
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static cn.vove7.qtmnotificationplugin.util.Utils.inTimeQuantum;
+import static cn.vove7.qtmnotificationplugin.utils.Utils.inTimeQuantum;
 import static org.junit.Assert.assertEquals;
 
 /**

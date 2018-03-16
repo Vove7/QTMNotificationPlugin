@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TimePicker;
 
 import cn.vove7.qtmnotificationplugin.R;
-import cn.vove7.qtmnotificationplugin.util.SettingsHelper;
+import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
 
 
 public class TimePickerPreference extends DialogPreference {

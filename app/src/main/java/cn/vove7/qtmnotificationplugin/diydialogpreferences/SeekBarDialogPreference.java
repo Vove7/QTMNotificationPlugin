@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import cn.vove7.qtmnotificationplugin.R;
-import cn.vove7.qtmnotificationplugin.util.SettingsHelper;
-import cn.vove7.qtmnotificationplugin.util.Utils;
+import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
+import cn.vove7.qtmnotificationplugin.utils.Utils;
 
 import static android.content.ContentValues.TAG;
 

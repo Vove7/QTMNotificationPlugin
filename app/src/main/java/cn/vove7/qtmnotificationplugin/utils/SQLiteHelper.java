@@ -1,4 +1,4 @@
-package cn.vove7.qtmnotificationplugin.util;
+package cn.vove7.qtmnotificationplugin.utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

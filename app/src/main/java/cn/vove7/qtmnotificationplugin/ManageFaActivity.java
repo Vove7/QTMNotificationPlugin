@@ -19,12 +19,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import cn.vove7.easytheme.BaseThemeActivity;
-import cn.vove7.easytheme.EasyTheme;
-import cn.vove7.easytheme.ThemeSet;
 import cn.vove7.qtmnotificationplugin.adapter.MultiTitleAdapter;
-import cn.vove7.qtmnotificationplugin.util.MyApplication;
-import cn.vove7.qtmnotificationplugin.util.SQLOperator;
-import cn.vove7.qtmnotificationplugin.util.SettingsHelper;
+import cn.vove7.qtmnotificationplugin.utils.AppUtils;
+import cn.vove7.qtmnotificationplugin.utils.MyApplication;
+import cn.vove7.qtmnotificationplugin.utils.SQLOperator;
+import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
 
 import static cn.vove7.qtmnotificationplugin.QTMNotificationListener.TYPE_QQ_TIM;
 import static cn.vove7.qtmnotificationplugin.QTMNotificationListener.TYPE_WECHAT;
@@ -69,11 +68,8 @@ public class ManageFaActivity extends BaseThemeActivity {
       else
          toolbar.setTitle(R.string.text_manage_black_list);
       setSupportActionBar(toolbar);
-      if (EasyTheme.currentThemeMode == ThemeSet.ThemeMode.Light) {
-         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-      } else {
-         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-      }
+      setToolbarNavigationIcon(toolbar, R.drawable.ic_arrow_back_white_24dp, R.drawable.ic_arrow_back_black_24dp);
+
       //Toolbar返回按钮的点击事件
       toolbar.setNavigationOnClickListener(v -> {
          if (mSearchAutoComplete.isShown()) {
@@ -124,7 +120,7 @@ public class ManageFaActivity extends BaseThemeActivity {
             String key = (String) objects[1];
             set.add(query);
             SettingsHelper.setValue(key, set);
-            searchView.setQuery("",true);
+            searchView.setQuery("", true);
             return false;
          }
 
@@ -134,7 +130,15 @@ public class ManageFaActivity extends BaseThemeActivity {
             return false;
          }
       });
+      showTutorials(searchView);
       return super.onCreateOptionsMenu(menu);
+   }
+
+   private void showTutorials(View view) {
+      if (!SettingsHelper.getBoolean(R.string.key_manage_tutorial_is_show, false)) {
+         AppUtils.showTutorials(this, view, "看这里,看这里", "可用于搜索/添加", null);
+         SettingsHelper.setValue(R.string.key_manage_tutorial_is_show, true);
+      }
    }
 
    private Object[] getSetAndKey() {
@@ -201,15 +205,17 @@ public class ManageFaActivity extends BaseThemeActivity {
 
 
    private void refreshList(ArrayList[] lists) {
+
       LinearLayoutManager linear_lm = new LinearLayoutManager(this);
       linear_lm.setOrientation(LinearLayoutManager.VERTICAL);//
       listView.setLayoutManager(linear_lm);
       String title = listType == LIST_TYPE_FA ? "特别关心" : "黑名单";
       listView.setAdapter(new MultiTitleAdapter(pkgType, listType,
-              lists, new String[]{title, "好友"}, new boolean[]{true, false}));
+              lists, new String[]{title, "好友/群"}, new boolean[]{true, false}));
    }
 
    public void done(View view) {
       finish();
    }
+
 }

@@ -1,4 +1,4 @@
-package cn.vove7.qtmnotificationplugin.util;
+package cn.vove7.qtmnotificationplugin.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -88,7 +88,6 @@ public class Utils {
    public static int i(String v) {
       return Integer.parseInt(v);
    }
-
 
    public static void notificationVibrator(Context context, int time, int repeatNum) {
       Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);

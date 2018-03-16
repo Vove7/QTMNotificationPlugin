@@ -20,15 +20,17 @@ import cn.vove7.easytheme.EasyTheme;
 import cn.vove7.easytheme.ThemeSet;
 import cn.vove7.qtmnotificationplugin.fragments.QQSettingsFragment;
 import cn.vove7.qtmnotificationplugin.fragments.WechatSettingsFragment;
-import cn.vove7.qtmnotificationplugin.util.MyApplication;
-import cn.vove7.qtmnotificationplugin.util.PermissionUtils;
-import cn.vove7.qtmnotificationplugin.util.SettingsHelper;
+import cn.vove7.qtmnotificationplugin.utils.AppUtils;
+import cn.vove7.qtmnotificationplugin.utils.MyApplication;
+import cn.vove7.qtmnotificationplugin.utils.PermissionUtils;
+import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
 
 public class MainActivity extends BaseThemeActivity {
    QQSettingsFragment qqSettingsFragment = new QQSettingsFragment();
-   //TimSettingsFragment timSettingsFragment = new TimSettingsFragment();
    WechatSettingsFragment wechatSettingsFragment = new WechatSettingsFragment();
 
+   Toolbar toolbar;
+   int clickNum=0;
    //ViewPager viewPager;
    static int index = 0;
    private long oldTime = 0;
@@ -48,11 +50,17 @@ public class MainActivity extends BaseThemeActivity {
                index++;
                index %= ThemeSet.Theme.values().length;
                EasyTheme.applyRandomTheme(this);
+               if (clickNum < 5) {
+                  clickNum++;
+               }else {
+                  Toast.makeText(this,"啊啊啊啊啊啊",Toast.LENGTH_SHORT).show();
+                  clickNum=0;
+               }
                return false;
             }
             type = 1;
             //viewPager.setCurrentItem(0);
-            switchFragment(qqSettingsFragment);
+            switchFragment(qqSettingsFragment,getString(R.string.title_qq_tim));
             return true;
          case R.id.navigation_wechat:
             if (doubleClick && type == 3) {
@@ -62,7 +70,7 @@ public class MainActivity extends BaseThemeActivity {
             } else {
                type = 3;
                //viewPager.setCurrentItem(1);
-               switchFragment(wechatSettingsFragment);
+               switchFragment(wechatSettingsFragment,getString(R.string.title_wechat));
                return true;
             }
       }
@@ -73,8 +81,8 @@ public class MainActivity extends BaseThemeActivity {
 
    private void initFragment() {
       frameLayout = findViewById(R.id.fragment);
-      manager=getFragmentManager();
-      switchFragment(qqSettingsFragment);
+      manager = getFragmentManager();
+      switchFragment(qqSettingsFragment,getString(R.string.title_qq_tim));
       //viewPager=findViewById(R.id.fragment);
       //List<Fragment> list=new ArrayList<>();
       //list.add(qqSettingsFragment);
@@ -95,35 +103,46 @@ public class MainActivity extends BaseThemeActivity {
       BottomNavigationView navigation = findViewById(R.id.navigation);
       navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+      initToolbar();
       initFragment();
-
-      Toolbar toolbar = findViewById(R.id.toolbar);
+   }
+   private void initToolbar() {
+      toolbar = findViewById(R.id.toolbar);
       toolbar.inflateMenu(R.menu.main_menu);
       toolbar.setOnMenuItemClickListener(item -> {
-                 Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
                  switch (item.getItemId()) {
                     case R.id.menu_about: {
-
-                    }
-                    break;
-                    case R.id.menu_donate: {
-
+                       showAboutDialog();
                     }
                     break;
                     case R.id.menu_help: {
-
-                    }
-                    break;
-                    case R.id.menu_change_skin: {
-                       //applyTheme(EasyTheme.isDark);
+                       startActivity(new Intent(this, HelperActivity.class));
                     }
                     break;
                  }
                  return false;
               }
       );
-      //setSupportActionBar(toolbar);
    }
+
+   private void showAboutDialog() {
+      AlertDialog.Builder aboutDialogBuilder = new AlertDialog.Builder(this);
+      aboutDialogBuilder.setTitle(getString(R.string.text_about));
+
+      final AppUtils appUtils = new AppUtils(this);
+      aboutDialogBuilder.setNegativeButton("Donate",
+              (dialogInterface, i) -> appUtils.donateWithAlipay());
+      aboutDialogBuilder.setPositiveButton("检查更新",
+              (dia, i) -> appUtils.openMarket(getPackageName()));
+      aboutDialogBuilder.setView(R.layout.dialog_help_layout);
+
+      aboutDialogBuilder.setNeutralButton("Github",
+              (dialogInterface, i) -> appUtils.openGithub(githubUrl));
+      aboutDialogBuilder.show();
+
+   }
+
+   private static final String githubUrl = "https://github.com/Vove7/QTMNotificationPlugin";
 
    private void checkNotificationAccessPermission() {
       closeRequestDialog();//关闭询问窗口
@@ -131,8 +150,20 @@ public class MainActivity extends BaseThemeActivity {
          showRequestDialog();
       } else if (!QTMNotificationListener.isConnect) {//等待开启
          waitAccess();//等待开启
+      } else {
+         //成功开启
+         showTutorials();
       }
-      //成功开启
+   }
+
+   private void showTutorials() {
+      if (!SettingsHelper.getBoolean(R.string.key_main_tutorial_is_show, false)) {
+         AppUtils.showTutorials(this, findViewById(R.id.navigation_qq),
+                 "狂按有惊喜", "", R.drawable.ic_qq
+         );
+         SettingsHelper.setValue(R.string.key_main_tutorial_is_show, true);
+      }
+
    }
 
    private void closeRequestDialog() {
@@ -211,11 +242,12 @@ public class MainActivity extends BaseThemeActivity {
       return super.onKeyDown(keyCode, event);
    }
 
-   private Fragment currentFragment;
    private FragmentManager manager;
-   private void switchFragment(Fragment targetFragment) {
-      currentFragment = targetFragment;
+
+   private void switchFragment(Fragment targetFragment,String title) {
+      toolbar.setTitle(title);
       manager.beginTransaction().replace(R.id.fragment, targetFragment).commit();
    }
+
 
 }

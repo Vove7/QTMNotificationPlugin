@@ -2,7 +2,7 @@
     xmlns:myattrs="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="@string/title_qq_tim">
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/key_total_switch_qq"
             android:title="@string/text_total_switch" />
     </PreferenceCategory>
@@ -21,6 +21,7 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/text_vibrator">
         <SwitchPreference
+            android:defaultValue="true"
             android:key="@string/key_is_vibrator_qq"
             android:title="@string/text_open_vibrator" />
         <cn.vove7.qtmnotificationplugin.diydialogpreferences.SeekBarDialogPreference

@@ -13,10 +13,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.vove7.qtmnotificationplugin.util.MyApplication;
-import cn.vove7.qtmnotificationplugin.util.SQLOperator;
-import cn.vove7.qtmnotificationplugin.util.SettingsHelper;
-import cn.vove7.qtmnotificationplugin.util.Utils;
+import cn.vove7.qtmnotificationplugin.utils.MyApplication;
+import cn.vove7.qtmnotificationplugin.utils.SQLOperator;
+import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
+import cn.vove7.qtmnotificationplugin.utils.Utils;
 
 import static android.os.Build.VERSION_CODES.M;
 
@@ -53,6 +53,7 @@ public class QTMNotificationListener extends NotificationListenerService {
    public static final String TYPE_WECHAT = "WECHAT";
 
    private static final int TYPE_QQ_DIAL = 510;
+   private static final int TYPE_QQ_WEB_DL = 868;
    private static final int TYPE_QQ_OK = 102;
    private static final int TYPE_QQ_BACKGROUND = 488;
    private static final int TYPE_QQ_ZONE = 76;
@@ -108,9 +109,9 @@ public class QTMNotificationListener extends NotificationListenerService {
    private static final String MODE_ONLY_FA = "mode_only_fa";
 
    private void notifyQQOrTim(String title, String content) {
-      boolean totalSwitch = SettingsHelper.isTotalSwitchQQ();
+      boolean totalSwitch = SettingsHelper.getTotalSwitchQQ();
       int notificationType = parseQQNotificationType(title, content);
-      if (!totalSwitch) {
+      if (!totalSwitch || notificationType == TYPE_QQ_WEB_DL) {
          return;
       }
       //获得好友昵称
@@ -202,7 +203,7 @@ public class QTMNotificationListener extends NotificationListenerService {
    }
 
    private void notifyWechat(String title, String content) {
-      boolean totalSwitch = SettingsHelper.isTotalSwitchWeChat();
+      boolean totalSwitch = SettingsHelper.getTotalSwitchWechat();
       int notificationType = parseWechatNotificationType(title, content);
 
       if (!totalSwitch) {
@@ -285,6 +286,8 @@ public class QTMNotificationListener extends NotificationListenerService {
    private int parseQQNotificationType(String title, String content) {
       //QQ后台语音通话 or 后台提示
       if (title == null) {
+         if (content == null)
+            return TYPE_QQ_WEB_DL;
          return TYPE_QQ_DIAL;
       }
       Matcher matcher = Pattern.compile("QQ空间动态(\\(共(\\d+)条未读\\))?$").matcher(title);
@@ -325,6 +328,9 @@ public class QTMNotificationListener extends NotificationListenerService {
     * @return 返回昵称
     */
    private String getQQNickname(String title, String content) {
+      if(title==null){
+         return null;
+      }
       String regexMessageNum = "\\((\\d+)条(以上)?新消息\\)$";
       Matcher matcherNum = Pattern.compile(regexMessageNum).matcher(title);
 

@@ -10,14 +10,14 @@
    `compile 'cn.vove7:EasyTheme:1.0'`
    
    2.maven
-   ```
+```
    <dependency>
       <groupId>cn.vove7</groupId>
       <artifactId>EasyTheme</artifactId>
       <version>1.0</version>
       <type>pom</type>
    </dependency>
-   ```
+```
 
 - in your manifest,set `android:theme="@style/StartBackground"` in a activity which has change theme function.
 > this is to prevent arise white screen in transtion animation of change theme.

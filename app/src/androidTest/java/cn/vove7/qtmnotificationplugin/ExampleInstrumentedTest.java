@@ -8,7 +8,7 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import cn.vove7.qtmnotificationplugin.util.SQLiteHelper;
+import cn.vove7.qtmnotificationplugin.utils.SQLiteHelper;
 
 import static org.junit.Assert.assertEquals;
 

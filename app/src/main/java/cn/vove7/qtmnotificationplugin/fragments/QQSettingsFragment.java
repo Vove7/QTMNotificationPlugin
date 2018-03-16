@@ -11,8 +11,8 @@ import java.util.Map;
 
 import cn.vove7.qtmnotificationplugin.ManageFaActivity;
 import cn.vove7.qtmnotificationplugin.R;
-import cn.vove7.qtmnotificationplugin.util.SettingsHelper;
-import cn.vove7.qtmnotificationplugin.util.Utils;
+import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
+import cn.vove7.qtmnotificationplugin.utils.Utils;
 
 import static cn.vove7.qtmnotificationplugin.ManageFaActivity.LIST_TYPE_BLACK;
 import static cn.vove7.qtmnotificationplugin.ManageFaActivity.LIST_TYPE_FA;

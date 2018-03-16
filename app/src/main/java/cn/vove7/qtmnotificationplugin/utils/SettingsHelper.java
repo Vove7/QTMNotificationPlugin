@@ -1,4 +1,4 @@
-package cn.vove7.qtmnotificationplugin.util;
+package cn.vove7.qtmnotificationplugin.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -59,6 +59,9 @@ public class SettingsHelper {
       }
    }
 
+   public static void setValue(@StringRes int keyId, Object val) {
+      setValue($(keyId), val);
+   }
 
    public static void setValue(String key, Object val) {
       SharedPreferences.Editor editor = preferences.edit();
@@ -157,11 +160,11 @@ public class SettingsHelper {
    }
 
    public static boolean getTotalSwitchQQ() {
-      return getBoolean((R.string.key_total_switch_qq), false);
+      return getBoolean((R.string.key_total_switch_qq), true);
    }
 
    public static boolean getTotalSwitchWechat() {
-      return getBoolean((R.string.key_total_switch_wechat), false);
+      return getBoolean((R.string.key_total_switch_wechat), true);
    }
 
    public static String getPreference(String key) {
@@ -190,15 +193,6 @@ public class SettingsHelper {
 
    public static boolean isVibratorWechat() {
       return getBoolean((R.string.key_is_vibrator_wechat), false);
-   }
-
-
-   public static boolean isTotalSwitchQQ() {
-      return getBoolean((R.string.key_total_switch_qq), false);
-   }
-
-   public static boolean isTotalSwitchWeChat() {
-      return getBoolean((R.string.key_total_switch_wechat), false);
    }
 
    public static String getModeQQ() {

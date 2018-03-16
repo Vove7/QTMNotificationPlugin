@@ -7,13 +7,14 @@
 
     <TextView
         android:id="@+id/item_title"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_width="match_parent"
-        android:textColor="@color/green_900"
+        android:textColor="?android:attr/colorAccent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:paddingStart="20dp"
-        android:paddingEnd="10dp"
+        android:paddingEnd="20dp"
+        android:textSize="18sp"
+        android:clickable="false"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -23,6 +24,8 @@
         android:layout_height="wrap_content"
         android:paddingStart="20dp"
         android:paddingEnd="15dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="2dp"
         android:orientation="horizontal">
 
         <TextView

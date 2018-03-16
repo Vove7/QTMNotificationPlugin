@@ -11,7 +11,8 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        style="@style/ToolbarStyle"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="-5dp"
         android:elevation="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

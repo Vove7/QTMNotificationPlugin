@@ -14,7 +14,7 @@ import java.util.Set;
 
 import cn.vove7.qtmnotificationplugin.ManageFaActivity;
 import cn.vove7.qtmnotificationplugin.R;
-import cn.vove7.qtmnotificationplugin.util.SettingsHelper;
+import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
 
 public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.ViewHolder> {
    private int pkgType;
@@ -57,24 +57,39 @@ public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.Vi
               .inflate(R.layout.search_item, parent, false);
       final ViewHolder holder = new ViewHolder(view);
       holder.itemView.setOnClickListener(view1 -> {
-         String nickName = holder.nickname.getText().toString();
-         if (!nickName.equals(""))
-            toggleStatus(holder.checkBox, nickName);
+         int position = holder.getLayoutPosition();
+         int nowGroupIndex = calNowGroupIndex(position);
+         int index = position - getGroupNum(nowGroupIndex) - 1;
+
+         //String nickName = holder.nickname.getText().toString();
+         //if (!nickName.equals(""))
+         toggleStatus(holder.checkBox, nowGroupIndex, index);
       });
       return holder;
    }
 
-   private void toggleStatus(CheckBox checkBox, String n) {
+   private void toggleStatus(CheckBox checkBox, int group, int index) {
+      if (index < 0)
+         return;
       checkBox.toggle();
+      String n = lists[group].get(index);
       Object[] objects = ManageFaActivity.getSetAndKey(pkgType + listType);
       Set<String> set = (Set) objects[0];
       String key = (String) objects[1];
-
+      int removedIndex, addedIndex;
       if (checkBox.isChecked()) {
          set.add(n);
+         lists[0].add(lists[1].remove(index));
+         addedIndex = lists[0].size();
+         removedIndex = addedIndex + index + 1;
       } else {
+         lists[1].add(0,lists[0].remove(index));
+         removedIndex = index + 1;
+         addedIndex = lists[0].size()+2;
          set.remove(n);
       }
+      notifyItemRemoved(removedIndex);
+      notifyItemInserted(addedIndex);
       SettingsHelper.setValue(key, set);
 
       //
@@ -105,11 +120,11 @@ public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.Vi
    @Override
    public void onBindViewHolder(ViewHolder holder, int position) {
       int nowGroupIndex = calNowGroupIndex(position);
-      int index = position - getGroupNum(nowGroupIndex);
+      int index = position - getGroupNum(nowGroupIndex) - 1;
       Log.d(TAG, "onBindViewHolder: 当前pos->" + position +
               " nowGroup->" + nowGroupIndex + " index-> " + index);
 
-      if (index == 0) {//标题
+      if (index == -1) {//标题
          Log.d(TAG, "onBindViewHolder: 标题->" + titles[nowGroupIndex]);
          holder.title.setText(titles[nowGroupIndex]);
          holder.title.setVisibility(View.VISIBLE);
@@ -119,7 +134,7 @@ public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.Vi
          holder.title.setVisibility(View.GONE);
          holder.nickname.setVisibility(View.VISIBLE);
          holder.checkBox.setVisibility(View.VISIBLE);
-         String s = lists[nowGroupIndex].get(index - 1);
+         String s = lists[nowGroupIndex].get(index);
          Log.d(TAG, "onBindViewHolder: 元素->" + s);
          holder.checkBox.setChecked(checks[nowGroupIndex]);
          holder.nickname.setText(s);
