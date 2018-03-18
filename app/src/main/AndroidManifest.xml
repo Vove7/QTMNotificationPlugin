@@ -13,13 +13,12 @@
         android:supportsRtl="true">
         <activity
             android:name=".MainActivity"
+            android:excludeFromRecents="true"
             android:label="@string/app_name"
-            android:launchMode="singleInstance"
             android:theme="@style/StartBackground">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="cn.vove7.qtmnotificationplugin.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
@@ -43,9 +42,27 @@
         <activity
             android:name=".HelperActivity"
             android:label="@string/title_activity_helper"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".SplashActivity"
+            android:excludeFromRecents="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".DialReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SECRET_CODE" />
+                <data
+                    android:host="789"
+                    android:scheme="android_secret_code" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

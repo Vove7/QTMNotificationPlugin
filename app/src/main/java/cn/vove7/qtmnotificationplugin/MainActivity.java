@@ -4,13 +4,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +34,7 @@ public class MainActivity extends BaseThemeActivity {
    WechatSettingsFragment wechatSettingsFragment = new WechatSettingsFragment();
 
    Toolbar toolbar;
-   int clickNum=0;
+   int clickNum = 0;
    //ViewPager viewPager;
    static int index = 0;
    private long oldTime = 0;
@@ -52,15 +56,15 @@ public class MainActivity extends BaseThemeActivity {
                EasyTheme.applyRandomTheme(this);
                if (clickNum < 5) {
                   clickNum++;
-               }else {
-                  Toast.makeText(this,"啊啊啊啊啊啊",Toast.LENGTH_SHORT).show();
-                  clickNum=0;
+               } else {
+                  Toast.makeText(this, "啊啊啊啊啊啊", Toast.LENGTH_SHORT).show();
+                  clickNum = 0;
                }
                return false;
             }
             type = 1;
             //viewPager.setCurrentItem(0);
-            switchFragment(qqSettingsFragment,getString(R.string.title_qq_tim));
+            switchFragment(qqSettingsFragment, getString(R.string.title_qq_tim));
             return true;
          case R.id.navigation_wechat:
             if (doubleClick && type == 3) {
@@ -70,7 +74,7 @@ public class MainActivity extends BaseThemeActivity {
             } else {
                type = 3;
                //viewPager.setCurrentItem(1);
-               switchFragment(wechatSettingsFragment,getString(R.string.title_wechat));
+               switchFragment(wechatSettingsFragment, getString(R.string.title_wechat));
                return true;
             }
       }
@@ -82,7 +86,7 @@ public class MainActivity extends BaseThemeActivity {
    private void initFragment() {
       frameLayout = findViewById(R.id.fragment);
       manager = getFragmentManager();
-      switchFragment(qqSettingsFragment,getString(R.string.title_qq_tim));
+      switchFragment(qqSettingsFragment, getString(R.string.title_qq_tim));
       //viewPager=findViewById(R.id.fragment);
       //List<Fragment> list=new ArrayList<>();
       //list.add(qqSettingsFragment);
@@ -106,9 +110,26 @@ public class MainActivity extends BaseThemeActivity {
       initToolbar();
       initFragment();
    }
+
    private void initToolbar() {
       toolbar = findViewById(R.id.toolbar);
       toolbar.inflateMenu(R.menu.main_menu);
+      MenuItem hideIcon = toolbar.getMenu().getItem(0);
+      hideIcon.setChecked(SettingsHelper.getBoolean(R.string.key_hide_icon, false));
+      hideIcon.setOnMenuItemClickListener(menuItem -> {
+         boolean isHide = !menuItem.isChecked();
+         menuItem.setChecked(isHide);
+         Log.d(this.getClass().getName(), "onMenuItemClick: " + menuItem.getTitle() + isHide);
+         int func = isHide ? PackageManager.COMPONENT_ENABLED_STATE_DISABLED :
+                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+
+         getPackageManager().setComponentEnabledSetting(
+                 new ComponentName(this, SplashActivity.class),
+                 func, PackageManager.DONT_KILL_APP);
+
+         SettingsHelper.setValue(R.string.key_hide_icon, isHide);
+         return false;
+      });
       toolbar.setOnMenuItemClickListener(item -> {
                  switch (item.getItemId()) {
                     case R.id.menu_about: {
@@ -244,7 +265,7 @@ public class MainActivity extends BaseThemeActivity {
 
    private FragmentManager manager;
 
-   private void switchFragment(Fragment targetFragment,String title) {
+   private void switchFragment(Fragment targetFragment, String title) {
       toolbar.setTitle(title);
       manager.beginTransaction().replace(R.id.fragment, targetFragment).commit();
    }
