@@ -12,8 +12,7 @@ public class SplashActivity extends AppCompatActivity {
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      startActivity(new Intent("cn.vove7.qtmnotificationplugin.MAIN")
-              .addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS));
+      startActivity(new Intent("cn.vove7.qtmnotificationplugin.MAIN"));
       finish();
    }
 }

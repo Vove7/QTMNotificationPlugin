@@ -169,7 +169,7 @@ public class MainActivity extends BaseThemeActivity {
       closeRequestDialog();//关闭询问窗口
       if (!PermissionUtils.notificationListenerEnabled(this)) {
          showRequestDialog();
-      } else if (!QTMNotificationListener.isConnect) {//等待开启
+      } else if (!QTWNotificationListener.isConnect) {//等待开启
          waitAccess();//等待开启
       } else {
          //成功开启
@@ -207,7 +207,7 @@ public class MainActivity extends BaseThemeActivity {
       processDialog.show();
       new Handler().postDelayed(() -> {
          processDialog.dismiss();
-         if (!QTMNotificationListener.isConnect) {
+         if (!QTWNotificationListener.isConnect) {
             showRebootTips();
          }
       }, 1000);

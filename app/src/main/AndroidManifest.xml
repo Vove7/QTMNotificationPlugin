@@ -13,7 +13,6 @@
         android:supportsRtl="true">
         <activity
             android:name=".MainActivity"
-            android:excludeFromRecents="true"
             android:label="@string/app_name"
             android:theme="@style/StartBackground">
             <intent-filter>
@@ -23,7 +22,7 @@
         </activity>
 
         <service
-            android:name=".QTMNotificationListener"
+            android:name=".QTWNotificationListener"
             android:description="@string/app_name"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
@@ -43,8 +42,7 @@
             android:name=".HelperActivity"
             android:label="@string/title_activity_helper"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SplashActivity"
-            android:excludeFromRecents="true">
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

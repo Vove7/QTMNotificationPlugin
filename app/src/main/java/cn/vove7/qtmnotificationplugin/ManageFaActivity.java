@@ -25,8 +25,8 @@ import cn.vove7.qtmnotificationplugin.utils.MyApplication;
 import cn.vove7.qtmnotificationplugin.utils.SQLOperator;
 import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
 
-import static cn.vove7.qtmnotificationplugin.QTMNotificationListener.TYPE_QQ_TIM;
-import static cn.vove7.qtmnotificationplugin.QTMNotificationListener.TYPE_WECHAT;
+import static cn.vove7.qtmnotificationplugin.QTWNotificationListener.TYPE_QQ_TIM;
+import static cn.vove7.qtmnotificationplugin.QTWNotificationListener.TYPE_WECHAT;
 
 /**
  * 管理特别关心，黑名单

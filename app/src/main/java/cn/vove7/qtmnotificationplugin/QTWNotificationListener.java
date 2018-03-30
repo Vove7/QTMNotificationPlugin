@@ -20,11 +20,12 @@ import cn.vove7.qtmnotificationplugin.utils.Utils;
 
 import static android.os.Build.VERSION_CODES.M;
 
-public class QTMNotificationListener extends NotificationListenerService {
+public class QTWNotificationListener extends NotificationListenerService {
    private final String TAG = getClass().getName();
    public static boolean isConnect = false;
 
    public static final String PACKAGE_QQ = "com.tencent.mobileqq";
+   public static final String PACKAGE_QQ_I = "com.tencent.mobileqqi";
    public static final String PACKAGE_TIM = "com.tencent.tim";
    public static final String PACKAGE_MM = "com.tencent.mm";
 
@@ -32,7 +33,7 @@ public class QTMNotificationListener extends NotificationListenerService {
    public void onListenerConnected() {
       super.onListenerConnected();
       isConnect = true;
-      MyApplication.getInstance().setQTMNotificationListener(this);
+      MyApplication.getInstance().setQTWNotificationListener(this);
       //初始化配置
       SettingsHelper.initPreference(this);
 
@@ -78,7 +79,7 @@ public class QTMNotificationListener extends NotificationListenerService {
       Log.d(TAG, "标题：" + notificationTitle +
               "\n内容：" + notificationText + "\n");
 
-      parsePackage(sbn.getPackageName(), notificationTitle, notificationText);//
+      distributePkg(sbn.getPackageName(), notificationTitle, notificationText);//
       //Log.d("isOnGoing", "" + sbn.isOngoing());
    }
 
@@ -89,11 +90,12 @@ public class QTMNotificationListener extends NotificationListenerService {
     * @param title       通知标题
     * @param content     通知内容
     */
-   private void parsePackage(String packageName, String title, String content) {
+   private void distributePkg(String packageName, String title, String content) {
       switch (packageName) {
          case PACKAGE_QQ://QQ
             //notifyQQOrTim(true, title, content);
             //break;
+         case PACKAGE_QQ_I:
          case PACKAGE_TIM: //TIM
             notifyQQOrTim(title, content);
             break;
@@ -313,6 +315,12 @@ public class QTMNotificationListener extends NotificationListenerService {
             return TYPE_QQ_PUBLIC;
          case "朋友通知":
             return TYPE_QQ_FRIEND;
+         //QQI
+         case "Qzone":
+            if (content.contains("commented on your post") ||
+                    content.contains("leave you a message")) {
+               return TYPE_QQ_ZONE;
+            }
       }
 
       //好友-群-组..
@@ -328,7 +336,7 @@ public class QTMNotificationListener extends NotificationListenerService {
     * @return 返回昵称
     */
    private String getQQNickname(String title, String content) {
-      if(title==null){
+      if (title == null) {
          return null;
       }
       String regexMessageNum = "\\((\\d+)条(以上)?新消息\\)$";
@@ -369,3 +377,9 @@ public class QTMNotificationListener extends NotificationListenerService {
    private static final int TYPE_WECHAT_PAL = 527;
    private static final int TYPE_WECHAT_OK = 4;
 }
+
+//国际版
+//标题：Qzone
+//内容：大大 leave you a message: 1
+//标题：Qzone
+// 内容：大大 commented on your post

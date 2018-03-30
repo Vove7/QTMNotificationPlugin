@@ -5,11 +5,11 @@ import android.app.Application;
 import cn.vove7.easytheme.EasyTheme;
 import cn.vove7.easytheme.ThemeSet;
 import cn.vove7.qtmnotificationplugin.MainActivity;
-import cn.vove7.qtmnotificationplugin.QTMNotificationListener;
+import cn.vove7.qtmnotificationplugin.QTWNotificationListener;
 
 public class MyApplication extends Application {
    static MyApplication myApplication;
-   private QTMNotificationListener QTMNotificationListener;
+   private QTWNotificationListener QTWNotificationListener;
 
    private MainActivity mainActivity;
 
@@ -28,12 +28,12 @@ public class MyApplication extends Application {
    }
 
 
-   public QTMNotificationListener getQTMNotificationListener() {
-      return QTMNotificationListener;
+   public QTWNotificationListener getQTWNotificationListener() {
+      return QTWNotificationListener;
    }
 
-   public void setQTMNotificationListener(QTMNotificationListener QTMNotificationListener) {
-      this.QTMNotificationListener = QTMNotificationListener;
+   public void setQTWNotificationListener(QTWNotificationListener QTWNotificationListener) {
+      this.QTWNotificationListener = QTWNotificationListener;
    }
 
    public MainActivity getMainActivity() {
