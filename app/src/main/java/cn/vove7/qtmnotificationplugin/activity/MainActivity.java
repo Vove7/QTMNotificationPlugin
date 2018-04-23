@@ -113,13 +113,14 @@ public class MainActivity extends BaseThemeActivity {
       initFragment();
    }
 
-MenuItem totalSwitch;
+   MenuItem totalSwitch;
+   MenuItem hideIcon;
+
    @Override
    public boolean onMenuOpened(int featureId, Menu menu) {
       boolean s = SettingsHelper.getTotalSwitch();
       totalSwitch.setChecked(s);
-
-
+      hideIcon.setChecked(SettingsHelper.getBoolean(R.string.key_hide_icon, false));
       return super.onMenuOpened(featureId, menu);
    }
 
@@ -128,6 +129,7 @@ MenuItem totalSwitch;
       Log.d("MainActivity :", "onCreateOptionsMenu  ----> ");
       getMenuInflater().inflate(R.menu.main_menu, menu);
       totalSwitch = menu.getItem(0);
+      hideIcon = menu.getItem(1);
 
       return true;
    }
@@ -141,7 +143,7 @@ MenuItem totalSwitch;
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
-      Log.d(this.getClass().getName(), "onMenuItemClick: " + item.getTitle() );
+      Log.d(this.getClass().getName(), "onMenuItemClick: " + item.getTitle());
       switch (item.getItemId()) {
          case R.id.menu_about: {
             showAboutDialog();
@@ -151,12 +153,13 @@ MenuItem totalSwitch;
             startActivity(new Intent(this, HelperActivity.class));
          }
          break;
-         case R.id.total_switch:{
+         case R.id.total_switch: {
             boolean check = !item.isChecked();
             SettingsHelper.setValue(R.string.key_total_switch, check);
             item.setChecked(check);
-         }break;
-         case R.id.hide_icon:{
+         }
+         break;
+         case R.id.hide_icon: {
             boolean isHide = !item.isChecked();
             item.setChecked(isHide);
             int func = isHide ? PackageManager.COMPONENT_ENABLED_STATE_DISABLED :
@@ -167,7 +170,8 @@ MenuItem totalSwitch;
                     func, PackageManager.DONT_KILL_APP);
 
             SettingsHelper.setValue(R.string.key_hide_icon, isHide);
-         }break;
+         }
+         break;
       }
       return false;
    }

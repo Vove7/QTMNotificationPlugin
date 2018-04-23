@@ -1,4 +1,4 @@
-
+[酷安 -  QTW通知助手][1]
 ###功能
   <ul>
       <li>主要用于QTM(QQ,IM,WECHAT)的消息通知扩展，允许设置仅在熄屏状态下提醒消息</li>
@@ -49,3 +49,5 @@
           </div>
       </li>
   </ul>
+  
+[1]: http://math.stackexchange.com/

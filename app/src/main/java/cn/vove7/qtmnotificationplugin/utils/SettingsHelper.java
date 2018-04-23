@@ -191,11 +191,11 @@ public class SettingsHelper {
    }
 
    public static boolean isVibratorQQ() {
-      return getBoolean((R.string.key_is_vibrator_qq), false);
+      return getBoolean((R.string.key_is_vibrator_qq), true);
    }
 
    public static boolean isVibratorWechat() {
-      return getBoolean((R.string.key_is_vibrator_wechat), false);
+      return getBoolean((R.string.key_is_vibrator_wechat), true);
    }
 
    public static String getModeQQ() {
