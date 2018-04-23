@@ -17,7 +17,7 @@
             android:theme="@style/StartBackground">
             <intent-filter>
                 <action android:name="cn.vove7.qtmnotificationplugin.MAIN" />
-
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

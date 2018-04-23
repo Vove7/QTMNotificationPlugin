@@ -18,14 +18,14 @@ public class SplashActivity extends BaseThemeActivity {
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
-      initNewVersion();
-
       super.onCreate(savedInstanceState);
-      startActivity(new Intent("cn.vove7.qtmnotificationplugin.MAIN"));
-      finish();
+      if(!initNewVersion()) {
+         startActivity(new Intent("cn.vove7.qtmnotificationplugin.MAIN"));
+         finish();
+      }
    }
 
-   void initNewVersion() {
+   boolean initNewVersion() {
       PackageInfo info;
       try {
          info = getPackageManager().getPackageInfo(this.getPackageName(), 0);
@@ -35,13 +35,15 @@ public class SplashActivity extends BaseThemeActivity {
          int lastVersion = SettingsHelper.getInt(R.string.key_version, 0);
          Log.d("SplashActivity :", "initNewVersion  ----> " + lastVersion + " --> " + currentVersion);
          if (currentVersion > lastVersion) {
-            EasyTheme.applyTheme(this);
+            EasyTheme.applyDefaultTheme(this);
             SettingsHelper.setValue(R.string.key_total_switch, true);
             SettingsHelper.setValue(R.string.key_version, currentVersion);
+            return true;
          }
       } catch (PackageManager.NameNotFoundException e) {
          Log.d("SplashActivity :", "initNewVersion  ----> 新版本初始化出错");
          e.printStackTrace();
       }
+      return false;
    }
 }
