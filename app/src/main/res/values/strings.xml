@@ -14,11 +14,12 @@
     <string name="text_reopen">重新开启</string>
     <string name="text_recheck">重新检测</string>
     <string name="check_access_status">检查开启状态…</string>
-    <string name="text_total_switch">开启</string>
+    <string name="text_open">开启</string>
     <string name="text_vibrator">震动</string>
     <string name="text_vibrator_strength">震动强度</string>
     <string name="text_open_vibrator">开启震动</string>
     <string name="qtm_online">QTW提醒已上线</string>
+    <string name="qtm_offline">QTW已关闭</string>
     <string name="text_repeat_num">震动次数</string>
     <string name="text_num">次数</string>
     <!--preference_keys begin-->
@@ -26,6 +27,7 @@
     <string name="key_exclude_from_recent">exclude_from_recent</string>
     <!--总开关-->
     <string name="key_total_switch_qq">total_switch_qq</string>
+    <string name="key_total_switch">total_switch</string>
 
     <string name="key_total_switch_wechat">total_switch_wechat</string>
     <!--模式-->
@@ -70,6 +72,7 @@
     <string name="key_is_fa_no_distrubing_wechat">is_fa_no_distrubing_wechat</string>
     <!--特别关心-->
     <string name="key_fas_qq">fas_qq</string>
+    <string name="key_version">version</string>
 
     <string name="key_fas_wechat">fas_wechat</string>
     <string name="key_fa_ringtone_qq">fa_ringtone_qq</string>
@@ -131,6 +134,7 @@
     <string name="summary_about">制作此App的初衷主要是为了在手机熄屏及时获得(…)消息[震动]通知，同时在亮屏时可以不被消息震动所打搅.</string>
     <string name="text_hide_icon">隐藏桌面图标</string>
     <string name="text_exclude_from_recent">从最近隐藏</string>
+    <string name="text_total_switch">总开关</string>
 
 
 </resources>

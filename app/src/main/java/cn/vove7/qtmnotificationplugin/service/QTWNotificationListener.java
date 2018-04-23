@@ -1,4 +1,4 @@
-package cn.vove7.qtmnotificationplugin;
+package cn.vove7.qtmnotificationplugin.service;
 
 import android.app.Notification;
 import android.os.Build;
@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.vove7.qtmnotificationplugin.R;
 import cn.vove7.qtmnotificationplugin.utils.MyApplication;
 import cn.vove7.qtmnotificationplugin.utils.SQLOperator;
 import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
@@ -68,13 +69,14 @@ public class QTWNotificationListener extends NotificationListenerService {
 
    @Override
    public void onNotificationPosted(StatusBarNotification sbn) {
+      if (!SettingsHelper.getTotalSwitch()) {
+         return;
+      }
       Log.d(TAG, "\n获得通知 PackageName --- " + sbn.getPackageName());
-
       Notification notification = sbn.getNotification();
       Bundle extras = notification.extras;
       String notificationTitle = extras.getString(Notification.EXTRA_TITLE);
       String notificationText = extras.getString(Notification.EXTRA_TEXT);
-
 
       Log.d(TAG, "标题：" + notificationTitle +
               "\n内容：" + notificationText + "\n");
@@ -91,6 +93,7 @@ public class QTWNotificationListener extends NotificationListenerService {
     * @param content     通知内容
     */
    private void distributePkg(String packageName, String title, String content) {
+
       switch (packageName) {
          case PACKAGE_QQ://QQ
             //notifyQQOrTim(true, title, content);
@@ -108,7 +111,7 @@ public class QTWNotificationListener extends NotificationListenerService {
    }
 
    private static final String MODE_DEFAULT = "default";
-   private static final String MODE_ONLY_FA = "mode_only_fa";
+   private static final String MODE_ONLY_FA = "only_fa";
 
    private void notifyQQOrTim(String title, String content) {
       boolean totalSwitch = SettingsHelper.getTotalSwitchQQ();
@@ -139,25 +142,26 @@ public class QTWNotificationListener extends NotificationListenerService {
       String begin = SettingsHelper.getNoDistrubingBeginTimeQQ();
       String end = SettingsHelper.getNoDistrubingEndTimeQQ();
 
+      boolean isFa = isFaQQ(nickname);
       if (isNoDistrubingQuantum && Utils.inTimeQuantum(begin, end, null)) {
          Log.d(TAG, "notifyQQOrTim: no distrubing time quantum");
          boolean isFaOnND = SettingsHelper.isOpenFaOnNDQQ();
-         if (!(isFaOnND && isFaQQ(nickname))) {//没打开 或者打开不在特别关心中
+         if (!(isFaOnND && isFa)) {//没打开 或者打开不在特别关心中
             Log.d(TAG, "notifyQQOrTim: 没打开 或者不在特别关心中");
             return;
          }
       }
       String ringtone = SettingsHelper.getRingtoneQQ();
-      boolean isFa = isFaQQ(nickname);
+      Log.d("QTWNotificationList :", "notifyQQOrTim fa ----> " + isFa);
       if (isFa)
          ringtone = SettingsHelper.getFaRingtoneQQ();
       switch (mode) {
          case MODE_ONLY_FA: {
             if (!isFa) {//不是特别关心
-               Log.d(TAG, "notifyQQOrTim: not fa ");
+               Log.d(TAG, "notifyQQOrTim: 特别关心 0");
                return;
             }
-            Log.d(this.getClass().getName(), "notifyQQOrTim: in fa list" + nickname);
+            Log.d(this.getClass().getName(), "notifyQQOrTim: 特别关心 1" + nickname);
          }
          case MODE_DEFAULT: {//默认
             switch (notificationType) {
@@ -377,9 +381,3 @@ public class QTWNotificationListener extends NotificationListenerService {
    private static final int TYPE_WECHAT_PAL = 527;
    private static final int TYPE_WECHAT_OK = 4;
 }
-
-//国际版
-//标题：Qzone
-//内容：大大 leave you a message: 1
-//标题：Qzone
-// 内容：大大 commented on your post

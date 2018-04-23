@@ -13,7 +13,7 @@ import android.view.View;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 
-import cn.vove7.qtmnotificationplugin.MainActivity;
+import cn.vove7.qtmnotificationplugin.activity.MainActivity;
 import cn.vove7.qtmnotificationplugin.R;
 
 public class AppUtils {

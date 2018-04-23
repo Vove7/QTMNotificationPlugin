@@ -1,4 +1,4 @@
-package cn.vove7.qtmnotificationplugin;
+package cn.vove7.qtmnotificationplugin.activity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -19,19 +19,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import cn.vove7.easytheme.BaseThemeActivity;
+import cn.vove7.qtmnotificationplugin.R;
 import cn.vove7.qtmnotificationplugin.adapter.MultiTitleAdapter;
 import cn.vove7.qtmnotificationplugin.utils.AppUtils;
 import cn.vove7.qtmnotificationplugin.utils.MyApplication;
 import cn.vove7.qtmnotificationplugin.utils.SQLOperator;
 import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
 
-import static cn.vove7.qtmnotificationplugin.QTWNotificationListener.TYPE_QQ_TIM;
-import static cn.vove7.qtmnotificationplugin.QTWNotificationListener.TYPE_WECHAT;
+import static cn.vove7.qtmnotificationplugin.service.QTWNotificationListener.TYPE_QQ_TIM;
+import static cn.vove7.qtmnotificationplugin.service.QTWNotificationListener.TYPE_WECHAT;
 
 /**
  * 管理特别关心，黑名单
  */
-public class ManageFaActivity extends BaseThemeActivity {
+public class ManageGroupActivity extends BaseThemeActivity {
 
    private RecyclerView listView;
    private SearchView searchView;
@@ -90,7 +91,7 @@ public class ManageFaActivity extends BaseThemeActivity {
       refreshList(getAll());
    }
 
-   private static final String TAG = "ManageFaActivity";
+   private static final String TAG = "ManageGroupActivity";
 
    @SuppressLint("RestrictedApi")
    @Override

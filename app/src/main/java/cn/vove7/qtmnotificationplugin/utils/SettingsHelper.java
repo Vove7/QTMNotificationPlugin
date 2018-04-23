@@ -159,6 +159,9 @@ public class SettingsHelper {
               (R.string.key_black_list_wechat), new HashSet<>()));
    }
 
+   public static boolean getTotalSwitch() {
+      return getBoolean((R.string.key_total_switch), true);
+   }
    public static boolean getTotalSwitchQQ() {
       return getBoolean((R.string.key_total_switch_qq), true);
    }

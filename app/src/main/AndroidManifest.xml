@@ -12,17 +12,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/StartBackground">
             <intent-filter>
                 <action android:name="cn.vove7.qtmnotificationplugin.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <service
-            android:name=".QTWNotificationListener"
+            android:name=".service.QTWNotificationListener"
             android:description="@string/app_name"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
@@ -31,7 +32,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ManageFaActivity">
+        <activity android:name=".activity.ManageGroupActivity">
             <intent-filter>
                 <action android:name="cn.vove7.qtmnotificationplugin.manage_fa" />
 
@@ -39,10 +40,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".HelperActivity"
+            android:name=".activity.HelperActivity"
             android:label="@string/title_activity_helper"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SplashActivity">
+        <activity android:name=".activity.SplashActivity"
+            android:theme="@style/StartBackground">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -56,11 +58,22 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SECRET_CODE" />
+
                 <data
                     android:host="789"
                     android:scheme="android_secret_code" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".service.AppTileService"
+            android:label="QTW快捷开关"
+            android:icon="@drawable/ic_qq"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

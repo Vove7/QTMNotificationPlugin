@@ -1,4 +1,4 @@
-package cn.vove7.qtmnotificationplugin;
+package cn.vove7.qtmnotificationplugin.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,6 +14,7 @@ import android.support.design.widget.BottomNavigationView.OnNavigationItemSelect
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -22,8 +23,10 @@ import android.widget.Toast;
 import cn.vove7.easytheme.BaseThemeActivity;
 import cn.vove7.easytheme.EasyTheme;
 import cn.vove7.easytheme.ThemeSet;
+import cn.vove7.qtmnotificationplugin.R;
 import cn.vove7.qtmnotificationplugin.fragments.QQSettingsFragment;
 import cn.vove7.qtmnotificationplugin.fragments.WechatSettingsFragment;
+import cn.vove7.qtmnotificationplugin.service.QTWNotificationListener;
 import cn.vove7.qtmnotificationplugin.utils.AppUtils;
 import cn.vove7.qtmnotificationplugin.utils.MyApplication;
 import cn.vove7.qtmnotificationplugin.utils.PermissionUtils;
@@ -103,7 +106,6 @@ public class MainActivity extends BaseThemeActivity {
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.activity_main);
-      hideActionBar();
       BottomNavigationView navigation = findViewById(R.id.navigation);
       navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -111,40 +113,65 @@ public class MainActivity extends BaseThemeActivity {
       initFragment();
    }
 
+MenuItem totalSwitch;
+   @Override
+   public boolean onMenuOpened(int featureId, Menu menu) {
+      boolean s = SettingsHelper.getTotalSwitch();
+      totalSwitch.setChecked(s);
+
+
+      return super.onMenuOpened(featureId, menu);
+   }
+
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      Log.d("MainActivity :", "onCreateOptionsMenu  ----> ");
+      getMenuInflater().inflate(R.menu.main_menu, menu);
+      totalSwitch = menu.getItem(0);
+
+      return true;
+   }
+
+
    private void initToolbar() {
       toolbar = findViewById(R.id.toolbar);
-      toolbar.inflateMenu(R.menu.main_menu);
-      MenuItem hideIcon = toolbar.getMenu().getItem(0);
-      hideIcon.setChecked(SettingsHelper.getBoolean(R.string.key_hide_icon, false));
-      hideIcon.setOnMenuItemClickListener(menuItem -> {
-         boolean isHide = !menuItem.isChecked();
-         menuItem.setChecked(isHide);
-         Log.d(this.getClass().getName(), "onMenuItemClick: " + menuItem.getTitle() + isHide);
-         int func = isHide ? PackageManager.COMPONENT_ENABLED_STATE_DISABLED :
-                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
-
-         getPackageManager().setComponentEnabledSetting(
-                 new ComponentName(this, SplashActivity.class),
-                 func, PackageManager.DONT_KILL_APP);
-
-         SettingsHelper.setValue(R.string.key_hide_icon, isHide);
-         return false;
-      });
-      toolbar.setOnMenuItemClickListener(item -> {
-                 switch (item.getItemId()) {
-                    case R.id.menu_about: {
-                       showAboutDialog();
-                    }
-                    break;
-                    case R.id.menu_help: {
-                       startActivity(new Intent(this, HelperActivity.class));
-                    }
-                    break;
-                 }
-                 return false;
-              }
-      );
+      setSupportActionBar(toolbar);
    }
+
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      Log.d(this.getClass().getName(), "onMenuItemClick: " + item.getTitle() );
+      switch (item.getItemId()) {
+         case R.id.menu_about: {
+            showAboutDialog();
+         }
+         break;
+         case R.id.menu_help: {
+            startActivity(new Intent(this, HelperActivity.class));
+         }
+         break;
+         case R.id.total_switch:{
+            boolean check = !item.isChecked();
+            SettingsHelper.setValue(R.string.key_total_switch, check);
+            item.setChecked(check);
+         }break;
+         case R.id.hide_icon:{
+            boolean isHide = !item.isChecked();
+            item.setChecked(isHide);
+            int func = isHide ? PackageManager.COMPONENT_ENABLED_STATE_DISABLED :
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+
+            getPackageManager().setComponentEnabledSetting(
+                    new ComponentName(this, SplashActivity.class),
+                    func, PackageManager.DONT_KILL_APP);
+
+            SettingsHelper.setValue(R.string.key_hide_icon, isHide);
+         }break;
+      }
+      return false;
+   }
+
 
    private void showAboutDialog() {
       AlertDialog.Builder aboutDialogBuilder = new AlertDialog.Builder(this);
@@ -249,6 +276,10 @@ public class MainActivity extends BaseThemeActivity {
    protected void onResume() {
       super.onResume();
       checkNotificationAccessPermission();
+      boolean s = SettingsHelper.getTotalSwitch();
+      if (!s) {
+         Toast.makeText(this, "当前已关闭提醒", Toast.LENGTH_SHORT).show();
+      }
    }
 
    @Override

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Set;
 
-import cn.vove7.qtmnotificationplugin.ManageFaActivity;
+import cn.vove7.qtmnotificationplugin.activity.ManageGroupActivity;
 import cn.vove7.qtmnotificationplugin.R;
 import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
 
@@ -73,7 +73,7 @@ public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.Vi
          return;
       checkBox.toggle();
       String n = lists[group].get(index);
-      Object[] objects = ManageFaActivity.getSetAndKey(pkgType + listType);
+      Object[] objects = ManageGroupActivity.getSetAndKey(pkgType + listType);
       Set<String> set = (Set) objects[0];
       String key = (String) objects[1];
       int removedIndex, addedIndex;

@@ -3,6 +3,10 @@
 
     <item
         android:checkable="true"
+        android:id="@+id/total_switch"
+        android:title="@string/text_total_switch"/>
+    <item
+        android:checkable="true"
         android:id="@+id/hide_icon"
         android:title="@string/text_hide_icon"/>
     <item

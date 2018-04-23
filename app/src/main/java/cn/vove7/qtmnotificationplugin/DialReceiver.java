@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import cn.vove7.qtmnotificationplugin.activity.MainActivity;
+
 /**
  * 拨号*#*#789#*#*唤醒
  */

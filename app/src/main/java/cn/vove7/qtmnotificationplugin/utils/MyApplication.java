@@ -4,8 +4,8 @@ import android.app.Application;
 
 import cn.vove7.easytheme.EasyTheme;
 import cn.vove7.easytheme.ThemeSet;
-import cn.vove7.qtmnotificationplugin.MainActivity;
-import cn.vove7.qtmnotificationplugin.QTWNotificationListener;
+import cn.vove7.qtmnotificationplugin.activity.MainActivity;
+import cn.vove7.qtmnotificationplugin.service.QTWNotificationListener;
 
 public class MyApplication extends Application {
    static MyApplication myApplication;

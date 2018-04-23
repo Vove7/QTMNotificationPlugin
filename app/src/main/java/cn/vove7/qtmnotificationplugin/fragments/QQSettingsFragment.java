@@ -9,14 +9,14 @@ import android.preference.PreferenceFragment;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.vove7.qtmnotificationplugin.ManageFaActivity;
+import cn.vove7.qtmnotificationplugin.activity.ManageGroupActivity;
 import cn.vove7.qtmnotificationplugin.R;
 import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
 import cn.vove7.qtmnotificationplugin.utils.Utils;
 
-import static cn.vove7.qtmnotificationplugin.ManageFaActivity.LIST_TYPE_BLACK;
-import static cn.vove7.qtmnotificationplugin.ManageFaActivity.LIST_TYPE_FA;
-import static cn.vove7.qtmnotificationplugin.ManageFaActivity.PKG_TYPE_QQ_TIM;
+import static cn.vove7.qtmnotificationplugin.activity.ManageGroupActivity.LIST_TYPE_BLACK;
+import static cn.vove7.qtmnotificationplugin.activity.ManageGroupActivity.LIST_TYPE_FA;
+import static cn.vove7.qtmnotificationplugin.activity.ManageGroupActivity.PKG_TYPE_QQ_TIM;
 
 public class QQSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
 
@@ -53,7 +53,7 @@ public class QQSettingsFragment extends PreferenceFragment implements Preference
    private void setListenerOptionsQQ() {
 
       findPreference(getString(R.string.key_fas_qq)).setOnPreferenceClickListener(preference -> {
-         Intent intent = new Intent(QQSettingsFragment.this.getActivity(), ManageFaActivity.class);
+         Intent intent = new Intent(QQSettingsFragment.this.getActivity(), ManageGroupActivity.class);
          intent.putExtra("pkgType", PKG_TYPE_QQ_TIM);
          intent.putExtra("listType",LIST_TYPE_FA);
          startActivity(intent);
@@ -61,7 +61,7 @@ public class QQSettingsFragment extends PreferenceFragment implements Preference
       });
 
       findPreference(getString(R.string.key_black_list_qq)).setOnPreferenceClickListener(preference -> {
-         Intent intent = new Intent(QQSettingsFragment.this.getActivity(), ManageFaActivity.class);
+         Intent intent = new Intent(QQSettingsFragment.this.getActivity(), ManageGroupActivity.class);
          intent.putExtra("pkgType", PKG_TYPE_QQ_TIM);
          intent.putExtra("listType",LIST_TYPE_BLACK);
          startActivity(intent);

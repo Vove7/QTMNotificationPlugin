@@ -1,10 +1,11 @@
-package cn.vove7.qtmnotificationplugin;
+package cn.vove7.qtmnotificationplugin.activity;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.webkit.WebView;
 
 import cn.vove7.easytheme.BaseThemeActivity;
+import cn.vove7.qtmnotificationplugin.R;
 
 public class HelperActivity extends BaseThemeActivity {
 

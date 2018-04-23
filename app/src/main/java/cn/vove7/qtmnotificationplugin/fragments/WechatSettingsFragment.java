@@ -10,14 +10,14 @@ import android.support.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.vove7.qtmnotificationplugin.ManageFaActivity;
+import cn.vove7.qtmnotificationplugin.activity.ManageGroupActivity;
 import cn.vove7.qtmnotificationplugin.R;
 import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
 import cn.vove7.qtmnotificationplugin.utils.Utils;
 
-import static cn.vove7.qtmnotificationplugin.ManageFaActivity.LIST_TYPE_BLACK;
-import static cn.vove7.qtmnotificationplugin.ManageFaActivity.LIST_TYPE_FA;
-import static cn.vove7.qtmnotificationplugin.ManageFaActivity.PKG_TYPE_WECHAT;
+import static cn.vove7.qtmnotificationplugin.activity.ManageGroupActivity.LIST_TYPE_BLACK;
+import static cn.vove7.qtmnotificationplugin.activity.ManageGroupActivity.LIST_TYPE_FA;
+import static cn.vove7.qtmnotificationplugin.activity.ManageGroupActivity.PKG_TYPE_WECHAT;
 
 public class WechatSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
    public WechatSettingsFragment() {
@@ -54,7 +54,7 @@ public class WechatSettingsFragment extends PreferenceFragment implements Prefer
 
    private void setListenerOptionsWechat() {
       findPreference(getString(R.string.key_fas_wechat)).setOnPreferenceClickListener(preference -> {
-         Intent intent = new Intent(WechatSettingsFragment.this.getActivity(), ManageFaActivity.class);
+         Intent intent = new Intent(WechatSettingsFragment.this.getActivity(), ManageGroupActivity.class);
          intent.putExtra("pkgType", PKG_TYPE_WECHAT);
          intent.putExtra("listType", LIST_TYPE_FA);
          startActivity(intent);
@@ -62,7 +62,7 @@ public class WechatSettingsFragment extends PreferenceFragment implements Prefer
       });
 
       findPreference(getString(R.string.key_black_list_wechat)).setOnPreferenceClickListener(preference -> {
-         Intent intent = new Intent(WechatSettingsFragment.this.getActivity(), ManageFaActivity.class);
+         Intent intent = new Intent(WechatSettingsFragment.this.getActivity(), ManageGroupActivity.class);
          intent.putExtra("pkgType", PKG_TYPE_WECHAT);
          intent.putExtra("listType", LIST_TYPE_BLACK);
          startActivity(intent);
