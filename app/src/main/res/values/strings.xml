@@ -148,7 +148,7 @@
     <string name="text_hint">提示</string>
     <string name="text_check_for_update">检查更新</string>
     <string name="text_thanks_for_donate">谢谢支持</string>
-    <string name="summary_no_bother">提醒次数达到%d条后,暂时关闭提醒</string>
+    <string name="summary_no_bother">提醒次数达到%d条后，暂时关闭提醒</string>
     <string name="text_no_bother">消息阀门</string>
 
 

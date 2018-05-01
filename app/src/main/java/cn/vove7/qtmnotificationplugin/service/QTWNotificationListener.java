@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -103,10 +104,31 @@ public class QTWNotificationListener extends NotificationListenerService {
    private static final int TYPE_QQ_EMAIL = 859;
    private static final int TYPE_QQ_FRIEND = 373;
    private static final int TYPE_QQ_ALL_MEMBER_MSG = 723;
+   boolean removeFromUser = true;
 
    @Override
    public void onNotificationRemoved(StatusBarNotification sbn) {
-      super.onNotificationRemoved(sbn);
+      Log.d("Vove :", "onNotificationRemoved  ----> " + sbn.getPackageName());
+
+      switch (sbn.getPackageName()) {
+         case PACKAGE_QQ_I:
+         case PACKAGE_QQ://QQ
+         case PACKAGE_TIM: //TIM
+            new Handler().postDelayed(() -> {
+               if (removeFromUser) {
+                  Log.d("Vove :", "onNotificationRemoved  ----> 读取");
+                  notifyNumQQ = 0;
+               } else {
+                  Log.d("Vove :", "onNotificationRemoved  ----> 新消息");
+                  removeFromUser = true;
+               }
+            }, 1000);
+            break;
+
+         case PACKAGE_MM: //MM
+            notifyNumWechat = 0;
+            break;
+      }
    }
 
    @Override
@@ -114,7 +136,7 @@ public class QTWNotificationListener extends NotificationListenerService {
       if (!SettingsHelper.getTotalSwitch()) {
          return;
       }
-      Log.d(TAG, "\n获得通知 PackageName --- " + sbn.getPackageName());
+      Log.d(TAG, "\n获得通知 PackageName --- " + sbn.getPackageName() + " " + sbn.getKey() + " " + sbn.getId());
       Notification notification = sbn.getNotification();
       Bundle extras = notification.extras;
       String notificationTitle = extras.getString(Notification.EXTRA_TITLE);
@@ -142,6 +164,7 @@ public class QTWNotificationListener extends NotificationListenerService {
             //break;
          case PACKAGE_QQ_I:
          case PACKAGE_TIM: //TIM
+            removeFromUser = false;
             notifyQQOrTim(title, content);
             break;
 
@@ -228,7 +251,6 @@ public class QTWNotificationListener extends NotificationListenerService {
                      Log.d("Vove :", "notifyQQOrTim  ----> QQ Zone no");
                      return;
                   }
-                  Log.d("Vove :", "notifyQQOrTim  ----> QQ Zone yes");
                case TYPE_QQ_EMAIL:
                   if (notifyNumQQ >= SettingsHelper.getInt(R.string.key_max_msg_num_qq, 999)) {
                      Log.d("Vove :", "notifyQQOrTim 达到最大消息 ----> ");
