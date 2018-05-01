@@ -8,13 +8,15 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.Toast;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 
-import cn.vove7.qtmnotificationplugin.activity.MainActivity;
 import cn.vove7.qtmnotificationplugin.R;
+import cn.vove7.qtmnotificationplugin.activity.MainActivity;
 
 public class AppUtils {
    private Context context;
@@ -26,6 +28,7 @@ public class AppUtils {
    private static final String payCode = "FKX07237LYKEFIVIY8MSE9";
 
    public void donateWithAlipay() {
+      Toast.makeText(context, R.string.text_thanks_for_donate, Toast.LENGTH_SHORT).show();
       boolean hasInstalledAlipayClient = AlipayDonate.hasInstalledAlipayClient(context);
       if (hasInstalledAlipayClient) {
          AlipayDonate.startAlipayClient((MainActivity) context, payCode);
@@ -76,4 +79,9 @@ public class AppUtils {
               });
    }
 
+   public static int[] getScreenHW(Context context) {
+      DisplayMetrics displayMetrics = new DisplayMetrics();
+      ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+      return new int[]{displayMetrics.heightPixels, displayMetrics.widthPixels};
+   }
 }

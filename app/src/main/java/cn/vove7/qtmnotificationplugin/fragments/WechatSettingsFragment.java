@@ -31,7 +31,7 @@ public class WechatSettingsFragment extends PreferenceFragment implements Prefer
            R.string.key_ringtone_wechat,
            R.string.key_total_switch_wechat,
            R.string.key_is_no_distrubing_wechat,
-           R.string.key_repeat_num_wechat,
+           //R.string.key_repeat_num_wechat,
            R.string.key_mode_wechat,
            R.string.key_fa_ringtone_wechat};
 
@@ -81,14 +81,12 @@ public class WechatSettingsFragment extends PreferenceFragment implements Prefer
 
    private void initPreferenceView() {
       findPreference($(R.string.key_mode_wechat)).setSummary(mode.get(SettingsHelper.getModeWechat()));
-      findPreference($(R.string.key_vibrator_strength_wechat)).setSummary($i(SettingsHelper.getVibratorStrengthWechat()));
-      findPreference($(R.string.key_repeat_num_wechat)).setSummary($i(SettingsHelper.getRepeatNumWechat()));
+      //findPreference($(R.string.key_vibrator_strength_wechat)).setSummary($i(SettingsHelper.getVibratorStrengthWechat()));
+      //findPreference($(R.string.key_repeat_num_wechat)).setSummary($i(SettingsHelper.getRepeatNumWechat()));
       findPreference($(R.string.key_ringtone_wechat))
               .setSummary(Utils.getRingtoneTitleFromUri(this.getActivity(), SettingsHelper.getRingtoneWechat()));
-      findPreference($(R.string.key_no_disturbing_begin_wechat))
-              .setSummary(SettingsHelper.getNoDistrubingBeginTimeWechat());
-      findPreference($(R.string.key_no_disturbing_end_wechat))
-              .setSummary(SettingsHelper.getNoDistrubingEndTimeWechat());
+      findPreference($(R.string.key_no_disturbing_time_quantum_wechat))
+              .setSummary(SettingsHelper.getNoDistrubingTimeQuantumWechat());
       findPreference($(R.string.key_fa_ringtone_wechat))
               .setSummary(Utils.getRingtoneTitleFromUri(this.getActivity(), SettingsHelper.getFaRingtoneWechat()));
 
@@ -112,11 +110,11 @@ public class WechatSettingsFragment extends PreferenceFragment implements Prefer
          //SettingsHelper.setOptionEnabled(this, allOptionsWechat, (boolean) newValue);
       } else if (key.equals($(listenerOptionsWechat[4]))) {
          //SettingsHelper.setOptionEnabled(this, noDistrubingOptionsWechat, (boolean) newValue);
-      } else if (key.equals($(listenerOptionsWechat[5]))) {
+      }/* else if (key.equals($(listenerOptionsWechat[5]))) {
          preference.setSummary(String.valueOf((newValue)));
-      } else if (key.equals($(listenerOptionsWechat[6]))) {
+      }*/ else if (key.equals($(listenerOptionsWechat[5]))) {
          preference.setSummary(mode.get(newValue));
-      } else if (key.equals($(listenerOptionsWechat[7]))) {
+      } else if (key.equals($(listenerOptionsWechat[6]))) {
          preference.setSummary(Utils.getRingtoneTitleFromUri(this.getActivity(), (String) newValue));
       }
       return true;

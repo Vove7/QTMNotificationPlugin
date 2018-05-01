@@ -93,24 +93,34 @@ public class SettingsHelper {
       return getBoolean(R.string.key_is_no_distrubing_wechat, false);
    }
 
-   public static String getNoDistrubingBeginTimeQQ() {
-      return getString(R.string.key_no_disturbing_begin_qq, "23:00");
+   public static String getNoDistrubingTimeQuantumQQ() {
+      return getString(R.string.key_no_disturbing_time_quantum_qq, "23:00-06:00");
    }
+   //public static String getNoDistrubingBeginTimeQQ() {
+   //   return getString(R.string.key_no_disturbing_begin_qq, "23:00");
+   //}
+   //
+   //public static String getNoDistrubingEndTimeQQ() {
+   //   return getString(R.string.key_no_disturbing_end_qq, "06:00");
+   //}
 
-   public static String getNoDistrubingEndTimeQQ() {
-      return getString(R.string.key_no_disturbing_end_qq, "06:00");
+   public static String getNoDistrubingTimeQuantumWechat() {
+      return getString(R.string.key_no_disturbing_time_quantum_wechat, "23:00-06:00");
    }
-
-   public static String getNoDistrubingBeginTimeWechat() {
-      return getString(R.string.key_no_disturbing_begin_wechat, "23:00");
-   }
-
-   public static String getNoDistrubingEndTimeWechat() {
-      return getString(R.string.key_no_disturbing_end_wechat, "06:00");
-   }
+   //public static String getNoDistrubingBeginTimeWechat() {
+   //   return getString(R.string.key_no_disturbing_begin_wechat, "23:00");
+   //}
+   //
+   //public static String getNoDistrubingEndTimeWechat() {
+   //   return getString(R.string.key_no_disturbing_end_wechat, "06:00");
+   //}
 
    public static boolean isOpenFaOnNDQQ() {
       return getBoolean(R.string.key_is_fa_no_distrubing_qq, false);
+   }
+
+   public static boolean notifyAllMsgQQ() {
+      return getBoolean(R.string.key_notify_all_member_qq, false);
    }
 
    public static boolean isOpenFaOnNDWechat() {
@@ -141,6 +151,10 @@ public class SettingsHelper {
       return preferences.getStringSet($(keyId), d);
    }
 
+   public static boolean removeKey(@StringRes int key) {
+      return preferences.edit().remove($(key)).commit();
+   }
+
    public static Set<String> getFaSetQQ() {
       return new HashSet<>(getStringSet((R.string.key_fas_qq), new HashSet<>()));
    }
@@ -162,16 +176,13 @@ public class SettingsHelper {
    public static boolean getTotalSwitch() {
       return getBoolean((R.string.key_total_switch), true);
    }
+
    public static boolean getTotalSwitchQQ() {
       return getBoolean((R.string.key_total_switch_qq), true);
    }
 
    public static boolean getTotalSwitchWechat() {
       return getBoolean((R.string.key_total_switch_wechat), true);
-   }
-
-   public static String getPreference(String key) {
-      return getString(key, null);
    }
 
    public static String getRingtoneQQ() {
@@ -221,14 +232,12 @@ public class SettingsHelper {
    }
 
    public static int getRepeatNumQQ() {
-      return Integer.parseInt(getString((R.string.key_repeat_num_qq),
-              $(R.string.default_repeat_num)));
+      return getInt((R.string.key_repeat_num_qq), 2);
    }
 
 
    public static int getRepeatNumWechat() {
-      return Integer.parseInt(getString((R.string.key_repeat_num_wechat),
-              $(R.string.default_repeat_num)));
+      return getInt((R.string.key_repeat_num_wechat), 2);
    }
 
    public static boolean isAlarmQQ() {

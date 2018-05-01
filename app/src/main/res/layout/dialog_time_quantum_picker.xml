@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/radial_time_picker"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+    <!--756，1030-->
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_view"
+        app:tabSelectedTextColor="?android:attr/colorAccent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabMode="fixed" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_page"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="10dp">
+
+        <Button
+            android:id="@+id/button_neutral"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="@string/text_button_cancel"
+            android:textColor="?android:attr/colorAccent"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/button_negative"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="@string/text_button_cancel"
+                android:textColor="?android:attr/colorAccent" />
+
+            <Button
+                android:id="@+id/button_positive"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="@string/text_button_positive"
+                android:textColor="?android:attr/colorAccent" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

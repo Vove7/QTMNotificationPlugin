@@ -1,6 +1,10 @@
 package cn.vove7.qtmnotificationplugin.service;
 
 import android.app.Notification;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -24,11 +28,41 @@ import static android.os.Build.VERSION_CODES.M;
 public class QTWNotificationListener extends NotificationListenerService {
    private final String TAG = getClass().getName();
    public static boolean isConnect = false;
+   private int notifyNumQQ = 0;
+   private int notifyNumWechat = 0;
 
    public static final String PACKAGE_QQ = "com.tencent.mobileqq";
    public static final String PACKAGE_QQ_I = "com.tencent.mobileqqi";
    public static final String PACKAGE_TIM = "com.tencent.tim";
    public static final String PACKAGE_MM = "com.tencent.mm";
+
+   private void registerScreenOnReceiver() {
+      IntentFilter mScreenOnFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+      registerReceiver(mScreenOReceiver, mScreenOnFilter);
+   }
+
+   private void unregisterScreenOnReceiver() {
+      unregisterReceiver(mScreenOReceiver);
+   }
+
+   @Override
+   public void onDestroy() {
+      unregisterReceiver(mScreenOReceiver);
+      super.onDestroy();
+   }
+
+   private BroadcastReceiver mScreenOReceiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+         String action = intent.getAction();
+
+         if (Intent.ACTION_SCREEN_ON.equals(action)) {
+            Log.d("QTWNotification: ", "onReceive  ----> " + "—— SCREEN_ON ——");
+            notifyNumQQ = 0;
+            notifyNumWechat = 0;
+         }
+      }
+   };
 
    @Override
    public void onListenerConnected() {
@@ -41,12 +75,14 @@ public class QTWNotificationListener extends NotificationListenerService {
       Log.d(TAG, "QTM提醒已上线");
       if (Build.VERSION.SDK_INT < M)
          Looper.prepare();
+      registerScreenOnReceiver();
       Toast.makeText(this, R.string.qtm_online, Toast.LENGTH_SHORT).show();
    }
 
    @Override
    public void onListenerDisconnected() {
       super.onListenerDisconnected();
+      unregisterScreenOnReceiver();
       Log.d(TAG, "QTM提醒已下线");
       isConnect = false;
    }
@@ -66,6 +102,12 @@ public class QTWNotificationListener extends NotificationListenerService {
    private static final int TYPE_QQ_VERIFY_LOGIN = 191;
    private static final int TYPE_QQ_EMAIL = 859;
    private static final int TYPE_QQ_FRIEND = 373;
+   private static final int TYPE_QQ_ALL_MEMBER_MSG = 723;
+
+   @Override
+   public void onNotificationRemoved(StatusBarNotification sbn) {
+      super.onNotificationRemoved(sbn);
+   }
 
    @Override
    public void onNotificationPosted(StatusBarNotification sbn) {
@@ -139,15 +181,16 @@ public class QTWNotificationListener extends NotificationListenerService {
       }
       //免打扰
       boolean isNoDistrubingQuantum = SettingsHelper.isNoDistrubingOnQQ();
-      String begin = SettingsHelper.getNoDistrubingBeginTimeQQ();
-      String end = SettingsHelper.getNoDistrubingEndTimeQQ();
+      String[] s = SettingsHelper.getNoDistrubingTimeQuantumQQ().split("-");
+      String begin = s[0];
+      String end = s[1];
 
       boolean isFa = isFaQQ(nickname);
       if (isNoDistrubingQuantum && Utils.inTimeQuantum(begin, end, null)) {
          Log.d(TAG, "notifyQQOrTim: no distrubing time quantum");
          boolean isFaOnND = SettingsHelper.isOpenFaOnNDQQ();
          if (!(isFaOnND && isFa)) {//没打开 或者打开不在特别关心中
-            Log.d(TAG, "notifyQQOrTim: 没打开 或者不在特别关心中");
+            Log.d(TAG, "notifyQQOrTim: 免打扰 或者不在特别关心中");
             return;
          }
       }
@@ -158,10 +201,10 @@ public class QTWNotificationListener extends NotificationListenerService {
       switch (mode) {
          case MODE_ONLY_FA: {
             if (!isFa) {//不是特别关心
-               Log.d(TAG, "notifyQQOrTim: 特别关心 0");
+               Log.d(TAG, "notifyQQOrTim: 特别关心 no");
                return;
             }
-            Log.d(this.getClass().getName(), "notifyQQOrTim: 特别关心 1" + nickname);
+            Log.d(this.getClass().getName(), "notifyQQOrTim: 特别关心 yes" + nickname);
          }
          case MODE_DEFAULT: {//默认
             switch (notificationType) {
@@ -170,11 +213,28 @@ public class QTWNotificationListener extends NotificationListenerService {
                case TYPE_QQ_BACKGROUND:
                case TYPE_QQ_PC_LOGIN:
                   return;
+               case TYPE_QQ_ALL_MEMBER_MSG:
+                  Log.d("QTWNotification :", "notifyQQOrTim  ----> 全体消息 ");
+                  if (!SettingsHelper.notifyAllMsgQQ()) {
+                     Log.d("QTWNotification :", "notifyQQOrTim  ----> 不通知");
+                     return;
+                  }
+                  Log.d("QTWNotification :", "notifyQQOrTim  ----> 通知");
                case TYPE_QQ_OK:
                   new SQLOperator(this).insertNickname(nickname, TYPE_QQ_TIM);
                case TYPE_QQ_RELEVANCE:
                case TYPE_QQ_ZONE:
+                  if (!SettingsHelper.getBoolean(R.string.key_notify_qq_zone, true)) {
+                     Log.d("Vove :", "notifyQQOrTim  ----> QQ Zone no");
+                     return;
+                  }
+                  Log.d("Vove :", "notifyQQOrTim  ----> QQ Zone yes");
                case TYPE_QQ_EMAIL:
+                  if (notifyNumQQ >= SettingsHelper.getInt(R.string.key_max_msg_num_qq, 999)) {
+                     Log.d("Vove :", "notifyQQOrTim 达到最大消息 ----> ");
+                     return;
+                  }
+                  notifyNumQQ++;
                   boolean isVibrator = SettingsHelper.isVibratorQQ();
                   int vibratorStrength = SettingsHelper.getVibratorStrengthQQ();
                   int repeatNum = SettingsHelper.getRepeatNumQQ();
@@ -249,8 +309,9 @@ public class QTWNotificationListener extends NotificationListenerService {
                   }
                   //免打扰
                   boolean isNoDistrubingQuantum = SettingsHelper.isNoDistrubingOnWechat();
-                  String begin = SettingsHelper.getNoDistrubingBeginTimeWechat();
-                  String end = SettingsHelper.getNoDistrubingEndTimeWechat();
+                  String[] s = SettingsHelper.getNoDistrubingTimeQuantumWechat().split("-");
+                  String begin = s[0];
+                  String end = s[1];
 
                   if (isNoDistrubingQuantum && Utils.inTimeQuantum(begin, end, null)) {
                      Log.d(TAG, "notifyWechat: no distrubing time quantum");
@@ -262,6 +323,12 @@ public class QTWNotificationListener extends NotificationListenerService {
                   }
 
                   new SQLOperator(this).insertNickname(title, TYPE_WECHAT);
+
+                  if (notifyNumWechat >= SettingsHelper.getInt(R.string.key_max_msg_num_wechat, 999)) {
+                     Log.d("Vove :", "notifyWechat  ----> 达到最大消息");
+                     return;
+                  }
+                  notifyNumWechat++;
 
                   boolean isVibrator = SettingsHelper.isVibratorWechat();
                   int vibratorStrength = SettingsHelper.getVibratorStrengthWechat();
@@ -326,6 +393,9 @@ public class QTWNotificationListener extends NotificationListenerService {
                return TYPE_QQ_ZONE;
             }
       }
+      if (!content.startsWith("@全体成员") && content.contains("@全体成员")) {
+         return TYPE_QQ_ALL_MEMBER_MSG;
+      }
 
       //好友-群-组..
       Log.d(TAG, "parseQQNotificationType: 普通消息");
@@ -372,7 +442,6 @@ public class QTWNotificationListener extends NotificationListenerService {
       switch (title) {
          case "微信支付":
             return TYPE_WECHAT_PAL;
-
       }
       return TYPE_WECHAT_OK;
    }

@@ -1,5 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:myattrs="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="@string/title_qq_tim">
         <SwitchPreference
             android:defaultValue="true"
@@ -24,18 +24,19 @@
             android:defaultValue="true"
             android:key="@string/key_is_vibrator_qq"
             android:title="@string/text_open_vibrator" />
-        <cn.vove7.qtmnotificationplugin.diydialogpreferences.SeekBarDialogPreference
-            android:dialogTitle="@string/text_vibrator_strength"
-            android:key="@string/key_vibrator_strength_qq"
-            android:title="@string/text_strength" />
-        <ListPreference
-            android:defaultValue="2"
-            android:dialogTitle="@string/text_repeat_num"
-            android:entries="@array/entries_repeat_num"
-            android:entryValues="@array/entries_repeat_num"
-            android:key="@string/key_repeat_num_qq"
-            android:summary="@string/text_repeat_num"
-            android:title="@string/text_num" />
+        <cn.vove7.qtmnotificationplugin.preferences.VibratorOptionPreference
+            android:dialogTitle="@string/text_vibrator_options"
+            android:title="@string/text_vibrator_options"
+            app:keyNum="@string/key_repeat_num_qq"
+            app:keyStrength="@string/key_vibrator_strength_qq" />
+        <!--<ListPreference-->
+        <!--android:defaultValue="2"-->
+        <!--android:dialogTitle="@string/text_repeat_num"-->
+        <!--android:entries="@array/entries_repeat_num"-->
+        <!--android:entryValues="@array/entries_repeat_num"-->
+        <!--android:key="@string/key_repeat_num_qq"-->
+        <!--android:summary="@string/text_repeat_num"-->
+        <!--android:title="@string/text_num" />-->
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/text_ringtone">
         <SwitchPreference
@@ -66,21 +67,31 @@
         <SwitchPreference
             android:key="@string/key_is_no_distrubing_qq"
             android:title="@string/text_open_no_distrubing" />
-        <cn.vove7.qtmnotificationplugin.diydialogpreferences.TimePickerPreference
-            android:dialogTitle="@string/text_begin_time"
-            android:key="@string/key_no_disturbing_begin_qq"
-            android:title="@string/text_begin_time"
-            myattrs:defaultHour="23"
-            myattrs:defaultMinute="0" />
-        <cn.vove7.qtmnotificationplugin.diydialogpreferences.TimePickerPreference
-            android:dialogTitle="@string/text_end_time"
-            android:key="@string/key_no_disturbing_end_qq"
-            android:title="@string/text_end_time"
-            myattrs:defaultHour="8"
-            myattrs:defaultMinute="0" />
+        <cn.vove7.qtmnotificationplugin.preferences.TimeQuantumPickerPreference
+            android:key="@string/key_no_disturbing_time_quantum_qq"
+            android:title="@string/text_time_quantum" />
         <CheckBoxPreference
             android:key="@string/key_is_fa_no_distrubing_qq"
             android:summary="@string/summary_fa"
             android:title="@string/text_fa_notify" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/text_other">
+        <cn.vove7.qtmnotificationplugin.preferences.NoBotherPreference
+            android:key="@string/key_max_msg_num_qq"
+            android:summary="@string/summary_no_bother"
+            android:title="@string/text_no_bother"
+            app:maxValue="99"
+            app:minValue="3" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/key_notify_all_member_qq"
+            android:summary="@string/text_notify_all_member_msg_summary"
+            android:title="@string/text_all_member_msg" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/key_notify_qq_zone"
+            android:title="@string/text_notify_qq_zone" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -10,12 +10,13 @@
     <string name="request_permission_message">使用此APP需打开通知访问权限</string>
     <string name="text_button_open">去开启</string>
     <string name="text_button_exit">退出</string>
-    <string name="access_open_failed_tips">开启失败，可尝试：\n1.关闭再打开通知使用权限\n2.重启手机</string>
+    <string name="access_open_failed_tips">开启失败，可尝试：\n1.关闭再打开通知使用权限\n2.重启App\n3.重启手机</string>
     <string name="text_reopen">重新开启</string>
     <string name="text_recheck">重新检测</string>
     <string name="check_access_status">检查开启状态…</string>
     <string name="text_open">开启</string>
     <string name="text_vibrator">震动</string>
+    <string name="text_vibrator_options">震动选项</string>
     <string name="text_vibrator_strength">震动强度</string>
     <string name="text_open_vibrator">开启震动</string>
     <string name="qtm_online">QTW提醒已上线</string>
@@ -56,16 +57,24 @@
 
     <string name="key_black_list_wechat">black_list_wechat</string>
     <!--免打扰时段-->
+    <string name="key_no_disturbing_time_quantum_qq">no_disturbing_time_quantum_qq</string>
+    <string name="key_no_disturbing_time_quantum_wechat">no_disturbing_time_quantum_wechat</string>
+
     <string name="key_no_disturbing_end_qq">no_disturbing_end_qq</string>
     <string name="key_no_disturbing_begin_qq">no_disturbing_begin_qq</string>
-
 
     <string name="key_no_disturbing_end_wechat">no_disturbing_end_wechat</string>
     <string name="key_no_disturbing_begin_wechat">no_disturbing_begin_wechat</string>
     <!--免打扰-->
     <string name="key_is_no_distrubing_qq">is_no_distrubing_qq</string>
-
     <string name="key_is_no_distrubing_wechat">is_no_distrubing_wechat</string>
+    <!--全体消息免打扰-->
+    <string name="key_notify_all_member_qq">notify_all_member_qq</string>
+    <!--QQ空间提醒-->
+    <string name="key_notify_qq_zone">notify_qq_zone</string>
+    <!--防骚扰-->
+    <string name="key_max_msg_num_qq">max_msg_num_qq</string>
+    <string name="key_max_msg_num_wechat">max_msg_num_wechat</string>
     <!--特别关心免打扰-->
     <string name="key_is_fa_no_distrubing_qq">is_fa_no_distrubing_qq</string>
 
@@ -88,13 +97,6 @@
     <string name="key_main_tutorial_is_show">main_tutorial_is_show</string>
     <string name="key_manage_tutorial_is_show">manage_tutorial_is_show</string>
     <!--keys end-->
-    <string-array name="entries_repeat_num">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-    </string-array>
     <string-array name="entries_mode">
         <item>@string/text_default</item>
         <item>@string/text_only_fa</item>
@@ -129,12 +131,25 @@
     <string name="summary_black_list">不提醒来自黑名单</string>
     <string name="text_random_change_skin">随机换肤</string>
     <string name="query_hint">搜索昵称记录/自定义</string>
-    <string name="title_activity_helper">HelperActivity</string>
     <string name="text_help">帮助</string>
     <string name="summary_about">制作此App的初衷主要是为了在手机熄屏及时获得(…)消息[震动]通知，同时在亮屏时可以不被消息震动所打搅.</string>
     <string name="text_hide_icon">隐藏桌面图标</string>
     <string name="text_exclude_from_recent">从最近隐藏</string>
     <string name="text_total_switch">总开关</string>
+    <string name="text_all_member_msg">全体消息</string>
+    <string name="text_notify_all_member_msg_summary">提醒来自全体消息\n(注意：关闭将会屏蔽所有群全体消息)</string>
+    <string name="text_time_quantum">时间段</string>
+    <string name="text_button_positive">确定</string>
+    <string name="text_button_cancel">取消</string>
+    <string name="text_next_step">下一步</string>
+    <string name="summary_vibrator_options">强度：%d\n次数：%d</string>
+    <string name="text_other">其他</string>
+    <string name="text_notify_qq_zone">QQ空间消息提醒</string>
+    <string name="text_hint">提示</string>
+    <string name="text_check_for_update">检查更新</string>
+    <string name="text_thanks_for_donate">谢谢支持</string>
+    <string name="summary_no_bother">提醒次数达到%d条后,暂时关闭提醒</string>
+    <string name="text_no_bother">消息阀门</string>
 
 
 </resources>

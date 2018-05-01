@@ -9,22 +9,32 @@
     android:orientation="vertical"
     tools:context=".activity.ManageGroupActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        app:contentInsetStart="0dp"
-        app:contentInsetStartWithNavigation="-5dp"
-        android:elevation="10dp"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
-        app:title="管理特别关心" />
+        android:background="?android:attr/colorAccent"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="?android:attr/actionBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="-5dp"
+            app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
+            app:popupTheme="?android:attr/popupTheme"
+            app:title="@string/text_manage_fa"
+            app:titleTextColor="#fff" />
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/search_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/app_bar"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     </android.support.v7.widget.RecyclerView>
@@ -43,8 +53,8 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_gravity="end|bottom"
-            android:layout_marginBottom="29dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="26dp"
             android:elevation="20dp"
             android:onClick="done"
             android:src="@drawable/ic_done_white_24dp"

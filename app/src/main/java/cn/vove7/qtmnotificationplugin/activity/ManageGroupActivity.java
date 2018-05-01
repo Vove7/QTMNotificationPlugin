@@ -20,7 +20,7 @@ import java.util.Set;
 
 import cn.vove7.easytheme.BaseThemeActivity;
 import cn.vove7.qtmnotificationplugin.R;
-import cn.vove7.qtmnotificationplugin.adapter.MultiTitleAdapter;
+import cn.vove7.qtmnotificationplugin.adapter.GroupAdapter;
 import cn.vove7.qtmnotificationplugin.utils.AppUtils;
 import cn.vove7.qtmnotificationplugin.utils.MyApplication;
 import cn.vove7.qtmnotificationplugin.utils.SQLOperator;
@@ -69,7 +69,6 @@ public class ManageGroupActivity extends BaseThemeActivity {
       else
          toolbar.setTitle(R.string.text_manage_black_list);
       setSupportActionBar(toolbar);
-      setToolbarNavigationIcon(toolbar, R.drawable.ic_arrow_back_white_24dp, R.drawable.ic_arrow_back_black_24dp);
 
       //Toolbar返回按钮的点击事件
       toolbar.setNavigationOnClickListener(v -> {
@@ -120,6 +119,8 @@ public class ManageGroupActivity extends BaseThemeActivity {
             Set<String> set = (Set<String>) objects[0];
             String key = (String) objects[1];
             set.add(query);
+
+            new SQLOperator(ManageGroupActivity.this).insertNickname(query, pkgType == PKG_TYPE_QQ_TIM ? TYPE_QQ_TIM : TYPE_WECHAT);
             SettingsHelper.setValue(key, set);
             searchView.setQuery("", true);
             return false;
@@ -211,8 +212,8 @@ public class ManageGroupActivity extends BaseThemeActivity {
       linear_lm.setOrientation(LinearLayoutManager.VERTICAL);//
       listView.setLayoutManager(linear_lm);
       String title = listType == LIST_TYPE_FA ? "特别关心" : "黑名单";
-      listView.setAdapter(new MultiTitleAdapter(pkgType, listType,
-              lists, new String[]{title, "好友/群"}, new boolean[]{true, false}));
+      listView.setAdapter(new GroupAdapter(pkgType, listType,
+              lists, new String[]{title, "好友/群"}));
    }
 
    public void done(View view) {

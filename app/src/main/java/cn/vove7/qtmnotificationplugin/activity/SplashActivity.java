@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import cn.vove7.easytheme.BaseThemeActivity;
-import cn.vove7.easytheme.EasyTheme;
 import cn.vove7.qtmnotificationplugin.R;
 import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
 
@@ -32,13 +31,18 @@ public class SplashActivity extends BaseThemeActivity {
 
          int currentVersion = info.versionCode;
          SettingsHelper.initPreference(this);
-         int lastVersion = SettingsHelper.getInt(R.string.key_version, 0);
+         int lastVersion = SettingsHelper.getInt(R.string.key_version, currentVersion);
          Log.d("SplashActivity :", "initNewVersion  ----> " + lastVersion + " --> " + currentVersion);
          if (currentVersion > lastVersion) {
-            EasyTheme.applyDefaultTheme(this);
-            SettingsHelper.setValue(R.string.key_total_switch, true);
+            int repeateNumQQ = Integer.parseInt(SettingsHelper.getString(R.string.key_repeat_num_qq, "2"));
+            int repeateNumW = Integer.parseInt(SettingsHelper.getString(R.string.key_repeat_num_wechat, "2"));
+            SettingsHelper.removeKey(R.string.key_repeat_num_qq);
+            SettingsHelper.removeKey(R.string.key_repeat_num_wechat);
+            SettingsHelper.setValue(R.string.key_repeat_num_qq,repeateNumQQ);
+            SettingsHelper.setValue(R.string.key_repeat_num_wechat,repeateNumW);
+
             SettingsHelper.setValue(R.string.key_version, currentVersion);
-            return true;
+            return false;
          }
       } catch (PackageManager.NameNotFoundException e) {
          Log.d("SplashActivity :", "initNewVersion  ----> 新版本初始化出错");

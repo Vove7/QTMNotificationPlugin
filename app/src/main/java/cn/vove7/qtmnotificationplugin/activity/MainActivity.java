@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import cn.vove7.easytheme.BaseThemeActivity;
 import cn.vove7.easytheme.EasyTheme;
-import cn.vove7.easytheme.ThemeSet;
 import cn.vove7.qtmnotificationplugin.R;
 import cn.vove7.qtmnotificationplugin.fragments.QQSettingsFragment;
 import cn.vove7.qtmnotificationplugin.fragments.WechatSettingsFragment;
@@ -36,10 +35,10 @@ public class MainActivity extends BaseThemeActivity {
    QQSettingsFragment qqSettingsFragment = new QQSettingsFragment();
    WechatSettingsFragment wechatSettingsFragment = new WechatSettingsFragment();
 
+   static boolean fromWechat = false;
    Toolbar toolbar;
    int clickNum = 0;
    //ViewPager viewPager;
-   static int index = 0;
    private long oldTime = 0;
    private int type = 0;
    private OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -54,49 +53,41 @@ public class MainActivity extends BaseThemeActivity {
       switch (item.getItemId()) {
          case R.id.navigation_qq://qq随机换肤
             if (doubleClick && type == 1) {
-               index++;
-               index %= ThemeSet.Theme.values().length;
+               fromWechat = false;
                EasyTheme.applyRandomTheme(this);
-               if (clickNum < 5) {
-                  clickNum++;
-               } else {
-                  Toast.makeText(this, "啊啊啊啊啊啊", Toast.LENGTH_SHORT).show();
-                  clickNum = 0;
-               }
                return false;
             }
             type = 1;
-            //viewPager.setCurrentItem(0);
             switchFragment(qqSettingsFragment, getString(R.string.title_qq_tim));
             return true;
          case R.id.navigation_wechat:
             if (doubleClick && type == 3) {
                //isDark = true;//微信夜间模式
+               fromWechat = true;
+               oldTime = 0;
                EasyTheme.toggleThemeMode(this);
                return false;
-            } else {
-               type = 3;
-               //viewPager.setCurrentItem(1);
-               switchFragment(wechatSettingsFragment, getString(R.string.title_wechat));
-               return true;
             }
+            type = 3;
+            switchFragment(wechatSettingsFragment, getString(R.string.title_wechat));
+            return true;
       }
       return false;
    };
 
    FrameLayout frameLayout;
+   BottomNavigationView navigation;
 
    private void initFragment() {
       frameLayout = findViewById(R.id.fragment);
       manager = getFragmentManager();
-      switchFragment(qqSettingsFragment, getString(R.string.title_qq_tim));
-      //viewPager=findViewById(R.id.fragment);
-      //List<Fragment> list=new ArrayList<>();
-      //list.add(qqSettingsFragment);
-      //list.add(wechatSettingsFragment);
-      //FragmentAdapter adapter=new FragmentAdapter(getSupportFragmentManager(),list);
-      //viewPager.setAdapter(adapter);
-      //viewPager.setCurrentItem(0);
+      if (!fromWechat)
+         switchFragment(qqSettingsFragment, getString(R.string.title_qq_tim));
+      else {
+         navigation.setSelectedItemId(R.id.navigation_wechat);
+         switchFragment(wechatSettingsFragment, getString(R.string.title_wechat));
+      }
+
    }
 
    @Override
@@ -106,7 +97,7 @@ public class MainActivity extends BaseThemeActivity {
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.activity_main);
-      BottomNavigationView navigation = findViewById(R.id.navigation);
+      navigation = findViewById(R.id.navigation);
       navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
       initToolbar();
@@ -184,7 +175,7 @@ public class MainActivity extends BaseThemeActivity {
       final AppUtils appUtils = new AppUtils(this);
       aboutDialogBuilder.setNegativeButton("Donate",
               (dialogInterface, i) -> appUtils.donateWithAlipay());
-      aboutDialogBuilder.setPositiveButton("检查更新",
+      aboutDialogBuilder.setPositiveButton(R.string.text_check_for_update,
               (dia, i) -> appUtils.openMarket(getPackageName()));
       aboutDialogBuilder.setView(R.layout.dialog_help_layout);
 
@@ -248,7 +239,7 @@ public class MainActivity extends BaseThemeActivity {
    private void showRebootTips() {
       AlertDialog.Builder rebootDialogBuilder = new AlertDialog.Builder(this);
       rebootDialogBuilder.setCancelable(false);
-      rebootDialogBuilder.setTitle("提示");
+      rebootDialogBuilder.setTitle(R.string.text_hint);
       rebootDialogBuilder.setMessage(R.string.access_open_failed_tips);
       rebootDialogBuilder.setNeutralButton(R.string.text_recheck, (dialog, which) -> {
          dialog.dismiss();

@@ -28,7 +28,7 @@ public class QQSettingsFragment extends PreferenceFragment implements Preference
            R.string.key_ringtone_qq,
            R.string.key_total_switch_qq,
            R.string.key_is_no_distrubing_qq,
-           R.string.key_repeat_num_qq,
+           //R.string.key_repeat_num_qq,
            R.string.key_mode_qq,
            R.string.key_fa_ringtone_qq};
    private Map<String, String> mode;
@@ -45,9 +45,6 @@ public class QQSettingsFragment extends PreferenceFragment implements Preference
       //SettingsHelper.setOptionEnabled(this, allOptionsQQ, SettingsHelper.getTotalSwitchQQ());
       initPreferenceView();
       setListenerOptionsQQ();
-   }
-   private String $i(int v) {
-      return String.valueOf(v);
    }
 
    private void setListenerOptionsQQ() {
@@ -75,18 +72,14 @@ public class QQSettingsFragment extends PreferenceFragment implements Preference
 
    private void initPreferenceView() {
       findPreference($(R.string.key_mode_qq)).setSummary(mode.get(SettingsHelper.getModeQQ()));
-      findPreference($(R.string.key_vibrator_strength_qq)).setSummary($i(SettingsHelper.getVibratorStrengthQQ()));
-      findPreference($(R.string.key_repeat_num_qq)).setSummary($i(SettingsHelper.getRepeatNumQQ()));
+      //findPreference($(R.string.key_vibrator_strength_qq)).setSummary($i(SettingsHelper.getVibratorStrengthQQ()));
+      //findPreference($(R.string.key_repeat_num_qq)).setSummary($i(SettingsHelper.getRepeatNumQQ()));
       findPreference($(R.string.key_ringtone_qq))
               .setSummary(Utils.getRingtoneTitleFromUri(this.getActivity(), SettingsHelper.getRingtoneQQ()));
-      findPreference($(R.string.key_no_disturbing_begin_qq))
-              .setSummary(SettingsHelper.getNoDistrubingBeginTimeQQ());
-      findPreference($(R.string.key_no_disturbing_end_qq))
-              .setSummary(SettingsHelper.getNoDistrubingEndTimeQQ());
+      //findPreference($(R.string.key_no_disturbing_time_quantum_qq))
+      //        .setSummary(SettingsHelper.getNoDistrubingTimeQuantumQQ());
       findPreference($(R.string.key_fa_ringtone_qq))
               .setSummary(Utils.getRingtoneTitleFromUri(this.getActivity(), SettingsHelper.getFaRingtoneQQ()));
-
-
    }
 
    private String $(int resId) {
@@ -106,11 +99,11 @@ public class QQSettingsFragment extends PreferenceFragment implements Preference
          //SettingsHelper.setOptionEnabled(this, allOptionsQQ, (boolean) newValue);
       } else if (key.equals($(listenerOptionsQQ[4]))) {
          //SettingsHelper.setOptionEnabled(this, noDistrubingOptionsQQ, (boolean) newValue);
-      } else if (key.equals($(listenerOptionsQQ[5]))) {
+      } /*else if (key.equals($(listenerOptionsQQ[5]))) {
          preference.setSummary(String.valueOf((newValue)));
-      } else if (key.equals($(listenerOptionsQQ[6]))) {
+      }*/ else if (key.equals($(listenerOptionsQQ[5]))) {
          preference.setSummary(mode.get(newValue));
-      } else if (key.equals($(listenerOptionsQQ[7]))) {
+      } else if (key.equals($(listenerOptionsQQ[6]))) {
          preference.setSummary(Utils.getRingtoneTitleFromUri(this.getActivity(), (String) newValue));
       }
       return true;

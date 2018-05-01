@@ -1,3 +1,37 @@
+<html id="font">
+<head>
+    <meta charset="UTF-8">
+    <script language="JavaScript">
+    function load_theme_ablack(){
+        document.bgColor="#000000"
+        var fontColor = document.getElementById("font");
+        if (!fontColor) {
+            return;
+        }
+        fontColor.style.color="white"
+    }
+    function load_theme_dark(){
+        document.bgColor="#303030"
+        var fontColor = document.getElementById("font");
+        if (!fontColor) {
+            return;
+        }
+        fontColor.style.color="white"
+    }
+
+    function load_theme_day(){
+        document.bgColor="#ffffff"
+        var fontColor = document.getElementById("font");
+        if (!fontColor) {
+            return;
+        }
+        fontColor.style.color="black"
+    }
+
+
+    </script>
+</head>
+<body>
 <h4>功能</h4>
 <ul>
     <li>主要用于QTM(QQ,IM,WECHAT)的消息通知扩展，允许设置仅在熄屏状态下提醒消息</li>
@@ -32,7 +66,7 @@
         <div>A:
             <ol>
                 <li>在状态栏长按快捷图标进入</li>
-                <li>可在最近窗口进入，或在拨号界面输入*#*#789#*#*<span style="color:red">(后台不可死)</span></li>
+                <li>可在最近窗口进入，或在拨号界面输入*#*#789#*#*(后台不可死)</li>
             </ol>
         </div>
     </li>
@@ -51,3 +85,5 @@
         </div>
     </li>
 </ul>
+</body>
+</html>

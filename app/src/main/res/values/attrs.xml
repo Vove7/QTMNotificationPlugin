@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="timePicker" >
-        <attr name="defaultHour" format="integer"/>
-        <attr name="defaultMinute" format="integer"/>
+    <declare-styleable name="timePicker">
+        <attr name="defaultBeginHour" format="integer" />
+        <attr name="defaultBeginMinute" format="integer" />
+        <attr name="defaultEndHour" format="integer" />
+        <attr name="defaultEndMinute" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="vibratorOptionsKey">
+        <attr name="keyStrength" format="string|reference" />
+        <attr name="keyNum" format="string|reference" />
+    </declare-styleable>
+    <declare-styleable name="numberPicker">
+        <attr name="minValue" format="integer"/>
+        <attr name="maxValue" format="integer"/>
     </declare-styleable>
 </resources>

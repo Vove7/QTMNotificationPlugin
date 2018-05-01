@@ -41,7 +41,7 @@
         </activity>
         <activity
             android:name=".activity.HelperActivity"
-            android:label="@string/title_activity_helper"
+            android:label="@string/text_help"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.SplashActivity"
             android:theme="@style/StartBackground">

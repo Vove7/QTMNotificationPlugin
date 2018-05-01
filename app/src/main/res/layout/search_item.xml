@@ -13,32 +13,32 @@
         android:layout_height="wrap_content"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:clickable="false"
         android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/item"
+        android:id="@+id/item_layout"
         android:layout_width="match_parent"
         android:background="?android:attr/selectableItemBackground"
         android:layout_height="wrap_content"
         android:paddingStart="20dp"
         android:paddingEnd="15dp"
-        android:paddingTop="1dp"
-        android:paddingBottom="2dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:orientation="horizontal">
 
         <TextView
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:id="@+id/item_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <CheckBox
-            android:id="@+id/item_check"
-            android:clickable="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <!--<CheckBox-->
+            <!--android:id="@+id/item_check"-->
+            <!--android:clickable="false"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
     </LinearLayout>
 </LinearLayout>

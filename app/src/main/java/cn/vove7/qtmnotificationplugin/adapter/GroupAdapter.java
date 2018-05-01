@@ -6,48 +6,62 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Set;
 
-import cn.vove7.qtmnotificationplugin.activity.ManageGroupActivity;
 import cn.vove7.qtmnotificationplugin.R;
+import cn.vove7.qtmnotificationplugin.activity.ManageGroupActivity;
 import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
 
-public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.ViewHolder> {
+public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> {
    private int pkgType;
    private int listType;
    private ArrayList<String>[] lists;
    private String[] titles;
-   private boolean[] checks;
+   //private boolean[] checks;
 
    static class ViewHolder extends RecyclerView.ViewHolder {
       TextView title;
       TextView nickname;
-      CheckBox checkBox;
-      View itemView;//
+      //CheckBox checkBox;
+      View itemView, item_layout;//
 
       public ViewHolder(View view) {
          super(view);
          itemView = view;//
          title = view.findViewById(R.id.item_title);
+         item_layout =view.findViewById(R.id.item_layout);
          nickname = view.findViewById(R.id.item_text);
-         checkBox = view.findViewById(R.id.item_check);
+         //checkBox = view.findViewById(R.id.item_check);
       }
    }
 
-   public MultiTitleAdapter(int pkgType, int listType, ArrayList<String>[] lists,
-                            String[] titles, boolean[] checks) {
+   public GroupAdapter(int pkgType, int listType, ArrayList<String>[] lists,
+                       String[] titles) {
       this.listType = listType;
       this.pkgType = pkgType;
       this.lists = lists;
       this.titles = titles;
-      this.checks = checks;
+      //this.checks = checks;
       if (lists.length != titles.length) {
          System.err.println("lists.length!=titles.length");
       }
+   }
+
+   private static final int TYPE_TITLE = 0;
+   private static final int TYPE_CONTENT = 1;
+
+   @Override
+   public int getItemViewType(int position) {
+      int nowGroupIndex = calNowGroupIndex(position);
+      int index = position - getGroupNum(nowGroupIndex) - 1;
+
+      if (index == -1) {//标题
+         return TYPE_TITLE;
+      }
+      return TYPE_CONTENT;
    }
 
    @NonNull
@@ -63,29 +77,29 @@ public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.Vi
 
          //String nickName = holder.nickname.getText().toString();
          //if (!nickName.equals(""))
-         toggleStatus(holder.checkBox, nowGroupIndex, index);
+         toggleStatus(nowGroupIndex, index);
       });
       return holder;
    }
 
-   private void toggleStatus(CheckBox checkBox, int group, int index) {
+   private void toggleStatus(int group, int index) {
       if (index < 0)
          return;
-      checkBox.toggle();
+
       String n = lists[group].get(index);
       Object[] objects = ManageGroupActivity.getSetAndKey(pkgType + listType);
       Set<String> set = (Set) objects[0];
       String key = (String) objects[1];
       int removedIndex, addedIndex;
-      if (checkBox.isChecked()) {
+      if (group == 1) {
          set.add(n);
          lists[0].add(lists[1].remove(index));
          addedIndex = lists[0].size();
          removedIndex = addedIndex + index + 1;
       } else {
-         lists[1].add(0,lists[0].remove(index));
+         lists[1].add(0, lists[0].remove(index));
          removedIndex = index + 1;
-         addedIndex = lists[0].size()+2;
+         addedIndex = lists[0].size() + 2;
          set.remove(n);
       }
       notifyItemRemoved(removedIndex);
@@ -128,15 +142,15 @@ public class MultiTitleAdapter extends RecyclerView.Adapter<MultiTitleAdapter.Vi
          Log.d(TAG, "onBindViewHolder: 标题->" + titles[nowGroupIndex]);
          holder.title.setText(titles[nowGroupIndex]);
          holder.title.setVisibility(View.VISIBLE);
-         holder.nickname.setVisibility(View.GONE);
-         holder.checkBox.setVisibility(View.GONE);
+         holder.item_layout.setVisibility(View.GONE);
+         //holder.checkBox.setVisibility(View.GONE);
       } else {
          holder.title.setVisibility(View.GONE);
-         holder.nickname.setVisibility(View.VISIBLE);
-         holder.checkBox.setVisibility(View.VISIBLE);
+         holder.item_layout.setVisibility(View.VISIBLE);
+         //holder.checkBox.setVisibility(View.VISIBLE);
          String s = lists[nowGroupIndex].get(index);
          Log.d(TAG, "onBindViewHolder: 元素->" + s);
-         holder.checkBox.setChecked(checks[nowGroupIndex]);
+         //holder.checkBox.setChecked(checks[nowGroupIndex]);
          holder.nickname.setText(s);
       }
    }
