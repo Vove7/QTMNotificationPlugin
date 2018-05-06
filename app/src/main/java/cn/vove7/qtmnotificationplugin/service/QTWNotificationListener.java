@@ -104,7 +104,8 @@ public class QTWNotificationListener extends NotificationListenerService {
    private static final int TYPE_QQ_EMAIL = 859;
    private static final int TYPE_QQ_FRIEND = 373;
    private static final int TYPE_QQ_ALL_MEMBER_MSG = 723;
-   boolean removeFromUser = true;
+   boolean qqRemoveFromUser = true;
+   boolean wRemoveFromUser = true;
 
    @Override
    public void onNotificationRemoved(StatusBarNotification sbn) {
@@ -115,18 +116,26 @@ public class QTWNotificationListener extends NotificationListenerService {
          case PACKAGE_QQ://QQ
          case PACKAGE_TIM: //TIM
             new Handler().postDelayed(() -> {
-               if (removeFromUser) {
+               if (qqRemoveFromUser) {
                   Log.d("Vove :", "onNotificationRemoved  ----> 读取");
                   notifyNumQQ = 0;
                } else {
                   Log.d("Vove :", "onNotificationRemoved  ----> 新消息");
-                  removeFromUser = true;
+                  qqRemoveFromUser = true;
                }
-            }, 1000);
+            }, 100);
             break;
 
          case PACKAGE_MM: //MM
-            notifyNumWechat = 0;
+            new Handler().postDelayed(() -> {
+               if (wRemoveFromUser) {
+                  Log.d("Vove :", "onNotificationRemoved  ----> 读取");
+                  notifyNumWechat = 0;
+               } else {
+                  Log.d("Vove :", "onNotificationRemoved  ----> 新消息");
+                  qqRemoveFromUser = true;
+               }
+            }, 100);
             break;
       }
    }
@@ -164,11 +173,12 @@ public class QTWNotificationListener extends NotificationListenerService {
             //break;
          case PACKAGE_QQ_I:
          case PACKAGE_TIM: //TIM
-            removeFromUser = false;
+            qqRemoveFromUser = false;
             notifyQQOrTim(title, content);
             break;
 
          case PACKAGE_MM: //MM
+            wRemoveFromUser = false;
             notifyWechat(title, content);
             break;
          default:
@@ -246,38 +256,43 @@ public class QTWNotificationListener extends NotificationListenerService {
                case TYPE_QQ_OK:
                   new SQLOperator(this).insertNickname(nickname, TYPE_QQ_TIM);
                case TYPE_QQ_RELEVANCE:
+                  sendNotifyQQ(ringtone);
+                  break;
                case TYPE_QQ_ZONE:
                   if (!SettingsHelper.getBoolean(R.string.key_notify_qq_zone, true)) {
                      Log.d("Vove :", "notifyQQOrTim  ----> QQ Zone no");
                      return;
                   }
                case TYPE_QQ_EMAIL:
-                  if (notifyNumQQ >= SettingsHelper.getInt(R.string.key_max_msg_num_qq, 999)) {
-                     Log.d("Vove :", "notifyQQOrTim 达到最大消息 ----> ");
-                     return;
-                  }
-                  notifyNumQQ++;
-                  boolean isVibrator = SettingsHelper.isVibratorQQ();
-                  int vibratorStrength = SettingsHelper.getVibratorStrengthQQ();
-                  int repeatNum = SettingsHelper.getRepeatNumQQ();
-                  boolean isAlarm = SettingsHelper.isAlarmQQ();
-                  if (isVibrator)
-                     Utils.notificationVibrator(this,
-                             vibratorStrength,
-                             repeatNum);
-                  if (isAlarm)
-                     Utils.startAlarm(this, ringtone);
+                  sendNotifyQQ(ringtone);
                   break;
                case TYPE_QQ_PUBLIC:
                case TYPE_QQ_VERIFY_LOGIN:
                case TYPE_QQ_HELLO: {
-
+                  return;
                }
-               break;
             }
          }
          break;
       }
+   }
+
+   private void sendNotifyQQ(String ringtone) {
+      if (notifyNumQQ >= SettingsHelper.getInt(R.string.key_max_msg_num_qq, 99)) {
+         Log.d("Vove :", "notifyQQOrTim 达到最大消息 ----> ");
+         return;
+      }
+      notifyNumQQ++;
+      boolean isVibrator = SettingsHelper.isVibratorQQ();
+      int vibratorStrength = SettingsHelper.getVibratorStrengthQQ();
+      int repeatNum = SettingsHelper.getRepeatNumQQ();
+      boolean isAlarm = SettingsHelper.isAlarmQQ();
+      if (isVibrator)
+         Utils.notificationVibrator(this,
+                 vibratorStrength,
+                 repeatNum);
+      if (isAlarm)
+         Utils.startAlarm(this, ringtone);
    }
 
    private boolean isFaQQ(String nickname) {
