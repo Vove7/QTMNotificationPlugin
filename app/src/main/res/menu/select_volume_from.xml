@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/from_notification"
+        android:title="@string/text_notification_volume" />
+    <item
+        android:id="@+id/from_media"
+        android:title="@string/text_media_volume" />
+    <item android:id="@+id/from_ringtone"
+        android:title="@string/text_ringtone_volume"/>
+
+</menu>

@@ -2,6 +2,7 @@ package cn.vove7.qtmnotificationplugin.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.media.AudioAttributes;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -11,6 +12,8 @@ import android.text.TextUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import cn.vove7.qtmnotificationplugin.R;
 
 public class Utils {
    public static boolean isScreenOn(Context context) {
@@ -76,7 +79,7 @@ public class Utils {
       return !(gt(beg, now) && gt(now, en));
    }
 
-   //
+   //???
    public static boolean gt(String[] v1, String[] v2) {
       if (i(v1[0]) > i(v2[0]))
          return true;
@@ -106,6 +109,9 @@ public class Utils {
    private static Ringtone ringtone;
 
    public static void startAlarm(Context context, String ring) {
+      AudioAttributes audioAttributes = new AudioAttributes.Builder()
+              .setUsage(SettingsHelper.getInt(R.string.key_volume_with, AudioAttributes.USAGE_NOTIFICATION))
+              .build();
       Uri uri;
       if (ring == null || ring.equals("")) {
          uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -116,6 +122,7 @@ public class Utils {
       if (ringtone != null && ringtone.isPlaying())
          ringtone.stop();
       ringtone = RingtoneManager.getRingtone(context, uri);
+      ringtone.setAudioAttributes(audioAttributes);
       ringtone.play();
    }
 

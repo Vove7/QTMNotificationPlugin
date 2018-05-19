@@ -7,16 +7,20 @@ import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.AudioAttributes;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +34,8 @@ import cn.vove7.qtmnotificationplugin.utils.AppUtils;
 import cn.vove7.qtmnotificationplugin.utils.MyApplication;
 import cn.vove7.qtmnotificationplugin.utils.PermissionUtils;
 import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
+
+import static cn.vove7.qtmnotificationplugin.utils.MyApplication.TextVolumeWith;
 
 public class MainActivity extends BaseThemeActivity {
    QQSettingsFragment qqSettingsFragment = new QQSettingsFragment();
@@ -106,12 +112,16 @@ public class MainActivity extends BaseThemeActivity {
 
    MenuItem totalSwitch;
    MenuItem hideIcon;
+   MenuItem setVolumeWith;
 
    @Override
    public boolean onMenuOpened(int featureId, Menu menu) {
       boolean s = SettingsHelper.getTotalSwitch();
       totalSwitch.setChecked(s);
       hideIcon.setChecked(SettingsHelper.getBoolean(R.string.key_hide_icon, false));
+      setVolumeWith.setTitle(String.format(getString(R.string.text_set_volume_with),
+              TextVolumeWith.get(SettingsHelper.getInt(R.string.key_volume_with,
+                      AudioAttributes.USAGE_NOTIFICATION))));
       return super.onMenuOpened(featureId, menu);
    }
 
@@ -121,7 +131,7 @@ public class MainActivity extends BaseThemeActivity {
       getMenuInflater().inflate(R.menu.main_menu, menu);
       totalSwitch = menu.getItem(0);
       hideIcon = menu.getItem(1);
-
+      setVolumeWith = menu.getItem(2);
       return true;
    }
 
@@ -144,6 +154,16 @@ public class MainActivity extends BaseThemeActivity {
             startActivity(new Intent(this, HelperActivity.class));
          }
          break;
+         case R.id.set_volume_with: {
+            PopupMenu popupMenu = new PopupMenu(this, toolbar);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+               popupMenu.setGravity(Gravity.END);
+            }
+            popupMenu.inflate(R.menu.select_volume_from);
+            popupMenu.setOnMenuItemClickListener(this::onOptionsItemSelected);
+            popupMenu.show();
+         }
+         break;
          case R.id.total_switch: {
             boolean check = !item.isChecked();
             SettingsHelper.setValue(R.string.key_total_switch, check);
@@ -161,6 +181,18 @@ public class MainActivity extends BaseThemeActivity {
                     func, PackageManager.DONT_KILL_APP);
 
             SettingsHelper.setValue(R.string.key_hide_icon, isHide);
+         }
+         break;
+         case R.id.from_notification: {
+            SettingsHelper.setValue(R.string.key_volume_with, AudioAttributes.USAGE_NOTIFICATION);
+         }
+         break;
+         case R.id.from_media: {
+            SettingsHelper.setValue(R.string.key_volume_with, AudioAttributes.USAGE_MEDIA);
+         }
+         break;
+         case R.id.from_ringtone: {
+            SettingsHelper.setValue(R.string.key_volume_with, AudioAttributes.USAGE_NOTIFICATION_RINGTONE);
          }
          break;
       }

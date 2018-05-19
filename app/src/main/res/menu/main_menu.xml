@@ -9,6 +9,8 @@
         android:checkable="true"
         android:id="@+id/hide_icon"
         android:title="@string/text_hide_icon"/>
+    <item android:id="@+id/set_volume_with"
+        android:title="@string/text_set_volume_with"/>
     <item
         android:id="@+id/menu_help"
         android:title="@string/menu_help" />

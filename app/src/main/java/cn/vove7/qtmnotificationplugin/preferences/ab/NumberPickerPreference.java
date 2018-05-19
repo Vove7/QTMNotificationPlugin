@@ -14,6 +14,9 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import cn.vove7.qtmnotificationplugin.R;
 import cn.vove7.qtmnotificationplugin.utils.SettingsHelper;
 
+/**
+ * NumberPickerPreference with DiscreteSeekBar
+ */
 public abstract class NumberPickerPreference extends DialogPreference {
    public NumberPickerPreference(Context context) {
       super(context);

@@ -96,6 +96,11 @@
     <!-- tutorials -->
     <string name="key_main_tutorial_is_show">main_tutorial_is_show</string>
     <string name="key_manage_tutorial_is_show">manage_tutorial_is_show</string>
+
+    <!--音量跟随-->
+    <string name="key_volume_with">volume_with</string>
+
+
     <!--keys end-->
     <string-array name="entries_mode">
         <item>@string/text_default</item>
@@ -150,6 +155,10 @@
     <string name="text_thanks_for_donate">谢谢支持</string>
     <string name="summary_no_bother">提醒次数达到%d条后，暂时关闭提醒</string>
     <string name="text_no_bother">消息阀门</string>
+    <string name="text_set_volume_with">音量跟随(%s)</string>
+    <string name="text_notification_volume">通知音量</string>
+    <string name="text_media_volume">媒体音量</string>
+    <string name="text_ringtone_volume">铃声音量</string>
 
 
 </resources>

@@ -104,38 +104,39 @@ public class QTWNotificationListener extends NotificationListenerService {
    private static final int TYPE_QQ_EMAIL = 859;
    private static final int TYPE_QQ_FRIEND = 373;
    private static final int TYPE_QQ_ALL_MEMBER_MSG = 723;
-   boolean qqRemoveFromUser = true;
-   boolean wRemoveFromUser = true;
+
+   long lastTimeQQ = 0;//上次通知post时间
+   long lastTimeW = 0;
 
    @Override
    public void onNotificationRemoved(StatusBarNotification sbn) {
       Log.d("Vove :", "onNotificationRemoved  ----> " + sbn.getPackageName());
-
+      long now = System.currentTimeMillis();
       switch (sbn.getPackageName()) {
          case PACKAGE_QQ_I:
          case PACKAGE_QQ://QQ
          case PACKAGE_TIM: //TIM
             new Handler().postDelayed(() -> {
-               if (qqRemoveFromUser) {
+               Log.d("Vove :", "QTWNotificationListener onNotificationRemoved  ----> "
+                       + now + " - " + lastTimeQQ);
+               if (lastTimeQQ < now) {
                   Log.d("Vove :", "onNotificationRemoved  ----> 读取");
                   notifyNumQQ = 0;
                } else {
                   Log.d("Vove :", "onNotificationRemoved  ----> 新消息");
-                  qqRemoveFromUser = true;
                }
-            }, 100);
+            }, 300);
             break;
 
          case PACKAGE_MM: //MM
             new Handler().postDelayed(() -> {
-               if (wRemoveFromUser) {
+               if (lastTimeW < now) {
                   Log.d("Vove :", "onNotificationRemoved  ----> 读取");
                   notifyNumWechat = 0;
                } else {
                   Log.d("Vove :", "onNotificationRemoved  ----> 新消息");
-                  qqRemoveFromUser = true;
                }
-            }, 100);
+            }, 300);
             break;
       }
    }
@@ -173,12 +174,12 @@ public class QTWNotificationListener extends NotificationListenerService {
             //break;
          case PACKAGE_QQ_I:
          case PACKAGE_TIM: //TIM
-            qqRemoveFromUser = false;
+            lastTimeQQ = System.currentTimeMillis();
             notifyQQOrTim(title, content);
             break;
 
          case PACKAGE_MM: //MM
-            wRemoveFromUser = false;
+            lastTimeW = System.currentTimeMillis();
             notifyWechat(title, content);
             break;
          default:
