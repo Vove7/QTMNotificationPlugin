@@ -33,9 +33,12 @@ public class QTWNotificationListener extends NotificationListenerService {
    private int notifyNumWechat = 0;
 
    public static final String PACKAGE_QQ = "com.tencent.mobileqq";
+   public static final String PACKAGE_QQ_NOTIF = "com.inklin.qqnotfandshare";//QQ通知增强
    public static final String PACKAGE_QQ_I = "com.tencent.mobileqqi";
    public static final String PACKAGE_TIM = "com.tencent.tim";
+
    public static final String PACKAGE_MM = "com.tencent.mm";
+   public static final String PACKAGE_WECHAT_NOTIF = "me.zhanghai.android.wechatnotificationtweaks2";//WECHAT通知增强
 
    private void registerScreenOnReceiver() {
       IntentFilter mScreenOnFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
@@ -108,33 +111,45 @@ public class QTWNotificationListener extends NotificationListenerService {
    long lastTimeQQ = 0;//上次通知post时间
    long lastTimeW = 0;
 
+   boolean isQQNotify = false;
+   boolean isWechatNotify = false;
+
    @Override
    public void onNotificationRemoved(StatusBarNotification sbn) {
       Log.d("Vove :", "onNotificationRemoved  ----> " + sbn.getPackageName());
-      long now = System.currentTimeMillis();
+      long removeTime = System.currentTimeMillis();
       switch (sbn.getPackageName()) {
          case PACKAGE_QQ_I:
+         case PACKAGE_QQ_NOTIF: {
+            Log.d("Vove :", "onNotificationRemoved  ----> QQ增强读取" + removeTime);
+            notifyNumQQ = 0;
+         }
          case PACKAGE_QQ://QQ
          case PACKAGE_TIM: //TIM
-            new Handler().postDelayed(() -> {
-               Log.d("Vove :", "QTWNotificationListener onNotificationRemoved  ----> "
-                       + now + " - " + lastTimeQQ);
-               if (lastTimeQQ < now) {
+            new Handler().postDelayed(() -> {//
+               Log.d("Vove :", "onNotificationRemoved  ----> " + removeTime + " - " + lastTimeQQ);
+               if (!isQQNotify && lastTimeQQ < removeTime) {
                   Log.d("Vove :", "onNotificationRemoved  ----> 读取");
                   notifyNumQQ = 0;
                } else {
                   Log.d("Vove :", "onNotificationRemoved  ----> 新消息");
+                  isQQNotify = false;
                }
             }, 300);
             break;
 
+         case PACKAGE_WECHAT_NOTIF: { //MM
+            Log.d("Vove :", "onNotificationRemoved  ----> Wechat增强读取" + removeTime);
+            notifyNumWechat = 0;
+         }
          case PACKAGE_MM: //MM
             new Handler().postDelayed(() -> {
-               if (lastTimeW < now) {
+               if (!isWechatNotify && lastTimeW < removeTime) {
                   Log.d("Vove :", "onNotificationRemoved  ----> 读取");
                   notifyNumWechat = 0;
                } else {
                   Log.d("Vove :", "onNotificationRemoved  ----> 新消息");
+                  isWechatNotify = false;
                }
             }, 300);
             break;
@@ -146,7 +161,7 @@ public class QTWNotificationListener extends NotificationListenerService {
       if (!SettingsHelper.getTotalSwitch()) {
          return;
       }
-      Log.d(TAG, "\n获得通知 PackageName --- " + sbn.getPackageName() + " " + sbn.getKey() + " " + sbn.getId());
+      Log.d("V :", "\n获得通知 PackageName --- " + sbn.getPackageName());
       Notification notification = sbn.getNotification();
       Bundle extras = notification.extras;
       String notificationTitle = extras.getString(Notification.EXTRA_TITLE);
@@ -169,6 +184,9 @@ public class QTWNotificationListener extends NotificationListenerService {
    private void distributePkg(String packageName, String title, String content) {
 
       switch (packageName) {
+         case PACKAGE_QQ_NOTIF:
+            isQQNotify = true;
+            break;
          case PACKAGE_QQ://QQ
             //notifyQQOrTim(true, title, content);
             //break;
@@ -178,6 +196,9 @@ public class QTWNotificationListener extends NotificationListenerService {
             notifyQQOrTim(title, content);
             break;
 
+         case PACKAGE_WECHAT_NOTIF: //MM
+            isWechatNotify = true;
+            break;
          case PACKAGE_MM: //MM
             lastTimeW = System.currentTimeMillis();
             notifyWechat(title, content);
@@ -278,9 +299,20 @@ public class QTWNotificationListener extends NotificationListenerService {
       }
    }
 
+   private static long lastNotifyTime = 0;
+
    private void sendNotifyQQ(String ringtone) {
+      Log.d("Vove :", "notifyQQOrTim  ----> 通知提醒 begin");
+      long now = System.currentTimeMillis();
+      if (now - lastNotifyTime < 500) {
+         lastNotifyTime = now;
+         Log.d("Vove :", "notifyQQOrTim  ----> 防止两条消息重叠 ");
+         return;
+      }
+      lastNotifyTime = now;
+
       if (notifyNumQQ >= SettingsHelper.getInt(R.string.key_max_msg_num_qq, 99)) {
-         Log.d("Vove :", "notifyQQOrTim 达到最大消息 ----> ");
+         Log.d("Vove :", "notifyQQOrTim 达到最大通知次数 ----> " + notifyNumQQ);
          return;
       }
       notifyNumQQ++;
@@ -288,12 +320,14 @@ public class QTWNotificationListener extends NotificationListenerService {
       int vibratorStrength = SettingsHelper.getVibratorStrengthQQ();
       int repeatNum = SettingsHelper.getRepeatNumQQ();
       boolean isAlarm = SettingsHelper.isAlarmQQ();
-      if (isVibrator)
-         Utils.notificationVibrator(this,
-                 vibratorStrength,
-                 repeatNum);
-      if (isAlarm)
-         Utils.startAlarm(this, ringtone);
+      new Handler().postDelayed(() -> {
+         if (isVibrator)
+            Utils.notificationVibrator(QTWNotificationListener.this,
+                    vibratorStrength, repeatNum);
+         if (isAlarm)
+            Utils.startAlarm(QTWNotificationListener.this, ringtone);
+      }, 100);//增强开启分组不提醒
+
    }
 
    private boolean isFaQQ(String nickname) {
@@ -359,32 +393,37 @@ public class QTWNotificationListener extends NotificationListenerService {
                         return;
                      }
                   }
-
                   new SQLOperator(this).insertNickname(title, TYPE_WECHAT);
-
-                  if (notifyNumWechat >= SettingsHelper.getInt(R.string.key_max_msg_num_wechat, 999)) {
-                     Log.d("Vove :", "notifyWechat  ----> 达到最大消息");
-                     return;
-                  }
-                  notifyNumWechat++;
-
-                  boolean isVibrator = SettingsHelper.isVibratorWechat();
-                  int vibratorStrength = SettingsHelper.getVibratorStrengthWechat();
-                  int repeatNum = SettingsHelper.getRepeatNumWechat();
-                  boolean isAlarm = SettingsHelper.isAlarmWechat();
-                  if (isVibrator)
-                     Utils.notificationVibrator(this,
-                             vibratorStrength,
-                             repeatNum);
-                  if (isAlarm)
-                     Utils.startAlarm(this, ringtone);
-
-
+                  sendNotifyWechat(ringtone);
                }
             }
       }
+   }
 
+   private void sendNotifyWechat(String ringtone) {
+      long now = System.currentTimeMillis();
+      if (now - lastNotifyTime < 500) {
+         lastNotifyTime = now;
+         Log.d("Vove :", "notifyWechat  ----> 防止两条消息重叠 ");
+         return;
+      }
+      lastNotifyTime = now;
+      if (notifyNumWechat >= SettingsHelper.getInt(R.string.key_max_msg_num_wechat, 999)) {
+         Log.d("Vove :", "notifyWechat  ----> 达到最大通知次数");
+         return;
+      }
+      notifyNumWechat++;
 
+      boolean isVibrator = SettingsHelper.isVibratorWechat();
+      int vibratorStrength = SettingsHelper.getVibratorStrengthWechat();
+      int repeatNum = SettingsHelper.getRepeatNumWechat();
+      boolean isAlarm = SettingsHelper.isAlarmWechat();
+      if (isVibrator)
+         Utils.notificationVibrator(this,
+                 vibratorStrength,
+                 repeatNum);
+      if (isAlarm)
+         Utils.startAlarm(this, ringtone);
    }
 
    /**
