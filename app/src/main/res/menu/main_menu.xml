@@ -5,10 +5,9 @@
         android:checkable="true"
         android:id="@+id/total_switch"
         android:title="@string/text_total_switch"/>
-    <item
-        android:checkable="true"
-        android:id="@+id/hide_icon"
-        android:title="@string/text_hide_icon"/>
+
+    <item android:id="@+id/lock_guide"
+        android:title="跳转上锁"/>
     <item android:id="@+id/set_volume_with"
         android:title="@string/text_set_volume_with"/>
     <item

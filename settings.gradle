@@ -1,1 +1,1 @@
-include ':app', ':easytheme'
+include ':app', ':easytheme', ':discreteSeekBar'

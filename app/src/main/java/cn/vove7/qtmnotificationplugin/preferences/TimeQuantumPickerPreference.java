@@ -116,7 +116,7 @@ public class TimeQuantumPickerPreference extends Preference {
          return timePicker;
       }
 
-      private final String[] TITLES = new String[]{
+      private String[] TITLES = new String[]{
               "开始时间", "结束时间"
       };
 

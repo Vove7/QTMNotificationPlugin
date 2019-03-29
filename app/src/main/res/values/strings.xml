@@ -159,6 +159,12 @@
     <string name="text_notification_volume">通知音量</string>
     <string name="text_media_volume">媒体音量</string>
     <string name="text_ringtone_volume">铃声音量</string>
-
+    <string name="lock_guide">
+        防止后台被杀\n
+        在此页面，\n
+        切入最近任务页面，\n
+        将此页面上锁；\n
+        然后返回。
+    </string>
 
 </resources>

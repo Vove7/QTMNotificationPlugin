@@ -38,6 +38,7 @@ public class EasyTheme {
       currentTheme = PreferenceUtils.getTheme();
       currentThemeMode = PreferenceUtils.getThemeMode();
       currentThemeId = PreferenceUtils.getThemeId();
+      context.setTheme(currentThemeId);
    }
 
    /**
@@ -62,7 +63,7 @@ public class EasyTheme {
 
    /**
     * 恢复默认主题,应在Application中调用EasyTHeme.init(..) {@link EasyTheme#init(Context, ThemeMode, Theme)}
-    * you should call {@link EasyTheme#init(Context, ThemeMode, Theme)} in you Application class before invoke it.
+    * You should call {@link EasyTheme#init(Context, ThemeMode, Theme)} in you application class before invoke it.
     * default R.style.Light.Primary
     */
    public static void applyDefaultTheme(Context context) {

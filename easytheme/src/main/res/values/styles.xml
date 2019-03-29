@@ -256,6 +256,7 @@
 
     <!--防止白色启动背景-->
     <style name="StartBackground">
+        <item name="colorPrimary">?android:attr/colorPrimary</item>
         <item name="android:windowBackground">@color/start_background</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
